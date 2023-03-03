@@ -29,11 +29,23 @@ def main():
         type=int,
         default=-14
     )
+    parser.add_argument(
+        '-c',
+        '--clipping_check',
+        help="check for audio clipping during processing. Longer processing.",
+        type=bool,
+        default=False
+    )
     args = parser.parse_args()
 
     print(f"### PROCESSING STARTED! AIMING FOR NEW TARGET LUFS: {args.target} \n")
 
-    wave_alignment(input_path=args.input, output_path=args.output, target_lufs=args.target)
+    wave_alignment(
+            input_path=args.input,
+            output_path=args.output,
+            target_lufs=args.target,
+            check_for_clipping=args.clipping_check
+            )
 
     print("\n### PROCESSING SUCCESSFULLY FINISHED! THANK YOU FOR HELPING TO END THIS BULLSHIT! ###")
 
