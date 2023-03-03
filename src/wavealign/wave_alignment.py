@@ -21,7 +21,7 @@ def wave_alignment(input_path, output_path, target_lufs, check_for_clipping):
                 assert (peak_after_processing <= 0)
 
             if output_path is None:
-                output = input_path
+                output = audio_spec_set.file_path
             else:
                 output = os.path.join(output_path, os.path.split(audio_spec_set.file_path)[1])
             write(output, audio_spec_set.audio_data, audio_spec_set.sample_rate, subtype='PCM_16')
