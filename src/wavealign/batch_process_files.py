@@ -10,20 +10,21 @@ def main():
     parser.add_argument(
         '-i',
         '--input',
-        help="specify directory to look for audio.",
+        help="Specify an input directory to look for audio. Nested structures are allowed.",
         type=str,
     )
     parser.add_argument(
         '-o',
         '--output',
-        help="specify the output directory to save the processed data. "
-             "If set to None the original data is overwritten.",
+        help="Specify the output directory to save the processed data. "
+             "If set to None the original data is overwritten."
+             "Nested folder structures will be  disolved.",
         type=str
     )
     parser.add_argument(
         '-t',
         '--target',
-        help="specify the target loudness level in dB LUFS.",
+        help="Specify the target loudness level in dB LUFS. Has to be between -30 and -9.",
         metavar='-30 <= target <= -10',
         choices=range(-30, -9),
         type=int,
@@ -32,7 +33,7 @@ def main():
     parser.add_argument(
         '-c',
         '--clipping_check',
-        help="check for audio clipping during processing. Longer processing.",
+        help="Check for audio clipping during processing. Processing time will be much longer.",
         type=bool,
         default=False
     )
