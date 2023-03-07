@@ -37,6 +37,7 @@ def wave_alignment(
                       audio_spec_set.audio_data,
                       audio_spec_set.sample_rate,
                       subtype='PCM_16')
+        print(f"Total number of processed files: {len(lufs_values)}")
         print(f"Minimum overall LUFS-value: {min(lufs_values)} dB LUFS")
         print(f"Maximum overall LUFS-value: {max(lufs_values)} dB LUFS")
     except AssertionError:

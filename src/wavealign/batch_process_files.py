@@ -31,19 +31,18 @@ def main():
         default=-14
     )
     parser.add_argument(
-        '-c',
-        '--clipping_check',
-        help="Check for audio clipping during processing. Processing time will be much longer.",
-        type=bool,
-        default=False
+        '-r',
+        '--read_only',
+        help="Run in read only mode. Only outputs LUFS of input files without processing them.",
+        action=argparse.BooleanOptionalAction,
     )
     parser.add_argument(
-            '-r',
-            '--read_only',
-            help="Run in read only mode. Only outputs LUFS of input files without processing them.",
-            type=bool,
-            default=True
-            )
+        '-c',
+        '--check_for_clipping',
+        help="Check for audio clipping during processing. Processing time will be much longer. "
+             "Only active if read-only is disabled.",
+        action=argparse.BooleanOptionalAction,
+    )
     args = parser.parse_args()
 
     if args.read_only:
