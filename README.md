@@ -17,7 +17,11 @@ For showing the argument parser help:
 python -m wavealign.batch_process_files -h
 ````
 
-To start processing you need to specify an audio input folder. An audio output folder is optional but be careful since this will overwrite your original files with the loudness-aligned version.
+To start processing you need to specify an audio input folder. Processing is set to read-only by default. You can run a first processing round
+to determine the minimum overall LUFS value of your songs. Then use this to actually process and loudness align your songs. 
+If you choose a value above the minimum overall LUFS value, clipping will very likely occure. 
+
+An audio output folder is optional but be careful since this will overwrite your original files with the loudness-aligned version.
 
 Nested input folder structures are supported but will be dissolved in the case of a specified output directory.
 
@@ -26,5 +30,5 @@ Target LUFS is set to -14 by default but is user adjustable between -10 dB and -
 Example for processing files from the `./input` folder with a loudness target of `-14` dB LUFS, storing the processed files in the `./output` folder:
 
 ````
-python -m wavealign.batch_process_files -i ./input -o ./output -t -14
+python -m wavealign.batch_process_files -i ./input -o ./output -t -14 -r False
 ````
