@@ -17,6 +17,5 @@ setup(
         'numpy==1.22.0',
         'librosa==0.10.0',
         'pyloudnorm==0.1.1',
-        'natsort~=8.2.0',
         ],
 )
