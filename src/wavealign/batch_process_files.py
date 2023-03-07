@@ -37,6 +37,13 @@ def main():
         type=bool,
         default=False
     )
+    parser.add_argument(
+            '-r',
+            '--read_only',
+            help="Run in read only mode. Only outputs LUFS of input files without processing them.",
+            type=bool,
+            default=True
+            )
     args = parser.parse_args()
 
     print(f"### PROCESSING STARTED! AIMING FOR NEW TARGET LUFS: {args.target} \n")
@@ -45,7 +52,8 @@ def main():
             input_path=args.input,
             output_path=args.output,
             target_lufs=args.target,
-            check_for_clipping=args.clipping_check
+            check_for_clipping=args.clipping_check,
+            read_only=args.read_only
             )
 
     print("\n### PROCESSING SUCCESSFULLY FINISHED! THANK YOU FOR HELPING TO END THIS BULLSHIT! ###")
