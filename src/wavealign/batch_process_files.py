@@ -46,7 +46,10 @@ def main():
             )
     args = parser.parse_args()
 
-    print(f"### PROCESSING STARTED! AIMING FOR NEW TARGET LUFS: {args.target} \n")
+    if args.read_only:
+        print(f"### PROCESSING STARTED! READ-ONLY MODE ACTIVE!")
+    else:
+        print(f"### PROCESSING STARTED! AIMING FOR NEW TARGET LUFS: {args.target} \n")
 
     wave_alignment(
             input_path=args.input,

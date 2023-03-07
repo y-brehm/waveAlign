@@ -16,9 +16,10 @@ def wave_alignment(
         read_only: bool
         ) -> None:
     try:
+        lufs_values = []
         for file_path in find_audio_files(os.path.normpath(input_path), file_ending='.wav'):
             audio_spec_set = generate_audio_spec_set(file_path)
-            lufs_values = [audio_spec_set.original_lufs]
+            lufs_values.append(audio_spec_set.original_lufs)
             print(f"Processing file: {file_path}, original LUFS: {audio_spec_set.original_lufs}")
             if read_only is False:
                 align_waveform_to_target(audio_spec_set, target_lufs)
@@ -37,5 +38,6 @@ def wave_alignment(
                       audio_spec_set.sample_rate,
                       subtype='PCM_16')
         print(f"Minimum overall LUFS-value: {min(lufs_values)} dB LUFS")
+        print(f"Maximum overall LUFS-value: {max(lufs_values)} dB LUFS")
     except AssertionError:
         raise Exception("Clipping occurred, please check your Levels!")
