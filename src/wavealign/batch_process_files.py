@@ -34,6 +34,7 @@ def main():
         '-r',
         '--read_only',
         help="Run in read only mode. Only outputs LUFS of input files without processing them.",
+        default=False,
         action=argparse.BooleanOptionalAction,
     )
     parser.add_argument(
@@ -41,6 +42,7 @@ def main():
         '--check_for_clipping',
         help="Check for audio clipping during processing. Processing time will be much longer. "
              "Only active if read-only is disabled.",
+        default=False,
         action=argparse.BooleanOptionalAction,
     )
     args = parser.parse_args()

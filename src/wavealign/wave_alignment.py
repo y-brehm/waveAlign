@@ -12,8 +12,8 @@ def wave_alignment(
         input_path: str,
         output_path: str,
         target_lufs: int,
+        read_only: bool,
         check_for_clipping: bool,
-        read_only: bool
         ) -> None:
     try:
         lufs_values = []
