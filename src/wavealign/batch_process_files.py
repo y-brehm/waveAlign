@@ -54,8 +54,8 @@ def main():
             input_path=args.input,
             output_path=args.output,
             target_lufs=args.target,
-            check_for_clipping=args.clipping_check,
-            read_only=args.read_only
+            read_only=args.read_only,
+            check_for_clipping=args.check_for_clipping
             )
 
     print("\n### PROCESSING SUCCESSFULLY FINISHED! THANK YOU FOR HELPING TO END THIS BULLSHIT! ###")
