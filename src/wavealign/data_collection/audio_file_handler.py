@@ -1,41 +1,38 @@
-import os
+from os.path import splitext
 
-import music_tag
-import numpy as np
+from music_tag import load_file
+import soundfile
 
-from soundfile import write, read
 from wavealign.loudness_processing.calculation import calculate_lufs
-from wavealign.data_collection.audio_spec_set import AudioSpecSet
+from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
 
 
-class AudioFileHandler:
-    def __init__(self):
-        self.artwork = None
-        self.sample_rate = None
+def read(file_path: str) -> AudioFileSpecSet:
+    metadata = load_file(file_path)
+    artwork = metadata['artwork']
 
-    def read(self, file_path: str) -> AudioSpecSet:
-        metadata = music_tag.load_file(file_path)
-        self.artwork = metadata['artwork']
+    audio_data, sample_rate = soundfile.read(file_path)
 
-        audio_data, self.sample_rate = read(file_path)
+    original_lufs = calculate_lufs(audio_data, sample_rate)
+    original_file_format = splitext(file_path)[1]
 
-        original_lufs = calculate_lufs(audio_data, self.sample_rate)
-        original_file_format = os.path.splitext(file_path)[1]
-
-        return AudioSpecSet(
-            file_path=file_path,
-            audio_data=audio_data,
-            sample_rate=int(self.sample_rate),
-            original_lufs=original_lufs,
-            original_file_extension=original_file_format
+    return AudioFileSpecSet(
+        file_path=file_path,
+        audio_data=audio_data,
+        sample_rate=int(sample_rate),
+        artwork=artwork,
+        original_lufs=original_lufs,
+        original_file_extension=original_file_format
         )
 
-    def write(self, filepath: str, audio_data: np.array) -> None:
-        write(filepath,
-              audio_data,
-              self.sample_rate,
-              subtype='PCM_16')
 
-        metadata = music_tag.load_file(filepath)
-        metadata['artwork'] = self.artwork
-        metadata.save()
+def write(file_path: str, audio_file_spec_set: AudioFileSpecSet) -> None:
+    soundfile.write(file_path,
+                    audio_file_spec_set.audio_data,
+                    audio_file_spec_set.sample_rate,
+                    subtype='PCM_16'
+                    )
+
+    metadata = load_file(file_path)
+    metadata['artwork'] = audio_file_spec_set.artwork
+    metadata.save()
