@@ -1,5 +1,3 @@
-from os.path import splitext
-
 from music_tag import load_file
 import soundfile
 
@@ -14,7 +12,6 @@ def read(file_path: str) -> AudioFileSpecSet:
     audio_data, sample_rate = soundfile.read(file_path)
 
     original_lufs = calculate_lufs(audio_data, sample_rate)
-    original_file_format = splitext(file_path)[1]
 
     return AudioFileSpecSet(
         file_path=file_path,
@@ -22,7 +19,6 @@ def read(file_path: str) -> AudioFileSpecSet:
         sample_rate=int(sample_rate),
         artwork=artwork,
         original_lufs=original_lufs,
-        original_file_extension=original_file_format
         )
 
 

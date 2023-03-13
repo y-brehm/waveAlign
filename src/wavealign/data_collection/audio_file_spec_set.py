@@ -8,5 +8,4 @@ class AudioFileSpecSet:
     audio_data: ndarray
     original_lufs: float
     sample_rate: int
-    original_file_extension: str
     artwork: bytearray
