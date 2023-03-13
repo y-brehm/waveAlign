@@ -1,9 +1,7 @@
 import os
 
-from soundfile import write
-
-from wavealign.data_collection.find_audio_files import find_audio_files
-from wavealign.data_collection.generate_audio_spec_set import generate_audio_spec_set
+from wavealign.data_collection.audio_file_finder import AudioFileFinder
+from wavealign.data_collection.audio_file_handler import AudioFileHandler
 from wavealign.loudness_processing.align_waveform_to_target import align_waveform_to_target
 from wavealign.loudness_processing.calculation import detect_peak
 
@@ -17,8 +15,10 @@ def wave_alignment(
         ) -> None:
     try:
         lufs_values = []
-        for file_path in find_audio_files(os.path.normpath(input_path), file_ending='.wav'):
-            audio_spec_set = generate_audio_spec_set(file_path)
+        for file_path in AudioFileFinder().find(os.path.normpath(input_path)):
+            print(file_path)
+            audio_file_handler = AudioFileHandler()
+            audio_spec_set = audio_file_handler.read(file_path)
             lufs_values.append(audio_spec_set.original_lufs)
             print(f"Processing file: {file_path}, original LUFS: {audio_spec_set.original_lufs}")
             if read_only is False:
@@ -33,10 +33,7 @@ def wave_alignment(
                     output = audio_spec_set.file_path
                 else:
                     output = os.path.join(output_path, os.path.split(audio_spec_set.file_path)[1])
-                write(output,
-                      audio_spec_set.audio_data,
-                      audio_spec_set.sample_rate,
-                      subtype='PCM_16')
+                audio_file_handler.write(output, audio_spec_set.audio_data)
         print(f"Total number of processed files: {len(lufs_values)}")
         print(f"Minimum overall LUFS-value: {min(lufs_values)} dB LUFS")
         print(f"Maximum overall LUFS-value: {max(lufs_values)} dB LUFS")
