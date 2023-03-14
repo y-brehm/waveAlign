@@ -38,3 +38,17 @@ while checking for clipping:
 ````
 python3 -m wavealign.batch_process_files -i ./your/songs -o ./output -t -16  --check_for_clipping
 ````
+
+# Run Tests (for developers only)
+
+Requires dev_requirementes to be installed:
+
+```
+pip3 install -r dev_requirementes.txt
+```
+
+After that tests can be run from the main directory:
+
+```
+python3 -m unittest discover
+```
