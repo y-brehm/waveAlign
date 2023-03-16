@@ -4,7 +4,6 @@ import os
 
 from wavealign.data_collection.audio_file_finder import AudioFileFinder
 
-
 class TestAudioFileFinder(unittest.TestCase):
 
     def setUp(self):
