@@ -5,15 +5,12 @@ from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
 from wavealign.data_collection.audio_file_handler import read, write
 
 class TestAudioFileHandler(unittest.TestCase):
-    
     def setUp(self):
         self.fake_file_path = "/my/fake/dir/fake_file_1.wav"
         self.fake_artwork = bytearray([1, 2, 3, 4, 5])
         self.fake_audio_data = mock.MagicMock()
         self.fake_sample_rate = 44100
         self.fake_original_lufs = 7.0
-        # self.fake_metadata = mock.MagicMock()
-        # self.fake_metadata_dict = {"artwork": None}
 
     @mock.patch('wavealign.data_collection.audio_file_handler.load_file')
     @mock.patch('wavealign.data_collection.audio_file_handler.soundfile.read')
@@ -21,12 +18,11 @@ class TestAudioFileHandler(unittest.TestCase):
     def test_read(self, mock_calculate_lufs, mock_read, mock_load_file):
         
         mock_load_file.return_value = {
-                "not artwork": "test",
+                "no artwork": "test",
                 "artwork": self.fake_artwork  
                 }
         mock_read.return_value = (self.fake_audio_data, self.fake_sample_rate)
         mock_calculate_lufs.return_value = self.fake_original_lufs
-
        
         fake_output = read(self.fake_file_path)
         
@@ -61,4 +57,8 @@ class TestAudioFileHandler(unittest.TestCase):
                 self.fake_sample_rate,
                 subtype='PCM_16'
                 )
+
         mock_load_file.assert_called_once_with(self.fake_file_path)
+        mock_load_file.return_value.__setitem__\
+                .assert_called_once_with('artwork', fake_audio_file_spec_set.artwork)
+        mock_load_file.return_value.save.assert_called_once()
