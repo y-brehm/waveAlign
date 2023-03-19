@@ -27,8 +27,6 @@ class TestAudioFileFinder(unittest.TestCase):
 
         fake_output = self.audio_file_finder.find(self.fake_start_dir)
 
-        expected_output = self.expected_output 
-
         mock_abspath.assert_called_once_with(self.fake_start_dir)
         mock_walk.assert_called_once_with(self.fake_start_dir)
         mock_AudioFileFinder__is_supported_audio_file.assert_has_calls([
@@ -37,7 +35,7 @@ class TestAudioFileFinder(unittest.TestCase):
             mock.call('fake_file_3.aiff')
             ])
 
-        self.assertEqual(fake_output, expected_output)
+        self.assertEqual(fake_output, self.expected_output)
 
     @mock.patch('wavealign.data_collection.audio_file_finder.os.walk')
     def test_find_functionality(self, mock_walk):
@@ -45,7 +43,5 @@ class TestAudioFileFinder(unittest.TestCase):
 
         fake_output = self.audio_file_finder.find(self.fake_start_dir)
 
-        expected_output = self.expected_output 
-        
         mock_walk.assert_called_once_with(self.fake_start_dir)
-        self.assertEqual(fake_output, expected_output)
+        self.assertEqual(fake_output, self.expected_output)
