@@ -6,7 +6,7 @@ from wavealign.data_collection.audio_file_handler import read, write
 
 class TestAudioFileHandler(unittest.TestCase):
     def setUp(self):
-        self.fake_file_path = "/my/fake/dir/fake_file_1.wav"
+        self.fake_file_path = '/my/fake/dir/fake_file_1.wav'
         self.fake_artwork = bytearray([1, 2, 3, 4, 5])
         self.fake_audio_data = mock.MagicMock()
         self.fake_sample_rate = 44100
@@ -18,8 +18,8 @@ class TestAudioFileHandler(unittest.TestCase):
     def test_read(self, mock_calculate_lufs, mock_read, mock_load_file):
         
         mock_load_file.return_value = {
-                "no artwork": "test",
-                "artwork": self.fake_artwork  
+                'no artwork': "test",
+                'artwork': self.fake_artwork  
                 }
         mock_read.return_value = (self.fake_audio_data, self.fake_sample_rate)
         mock_calculate_lufs.return_value = self.fake_original_lufs

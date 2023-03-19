@@ -7,33 +7,49 @@ class TestAudioFileFinder(unittest.TestCase):
 
     def setUp(self):
         self.audio_file_finder = AudioFileFinder()
-        self.fake_start_dir = "/my/fake/dir"
-
-    @mock.patch('os.path.abspath')
-    @mock.patch('os.walk')
-    def test_find(self, mock_walk, mock_abspath):
+        self.fake_start_dir = '/my/fake/dir'
+    
+    @mock.patch('wavealign.data_collection.audio_file_finder.os.path.abspath')
+    @mock.patch('wavealign.data_collection.audio_file_finder.os.walk')
+    @mock.patch('wavealign.data_collection.audio_file_finder.AudioFileFinder._AudioFileFinder__is_supported_audio_file')
+    def test_find_calls(self, mock_AudioFileFinder__is_supported_audio_file, mock_walk, mock_abspath):
         mock_abspath.return_value = self.fake_start_dir
         mock_walk.return_value = [
-                ("/my/fake/dir", ["subdir"], ["fake_file_1.wav", "fake_file_2.aiff", "fake_file_3.mp3"]),
-                ("/my/fake/dir/subdir", ["subdir2"], ["fake_file_4.mp3", "fake_file_5.wav"]),
-                ("/my/fake/dir/subdir/subdir2", [], [])
-        ]
-    
-        expected_result = [
-                "/my/fake/dir/fake_file_1.wav",
-                "/my/fake/dir/fake_file_2.aiff",
-                "/my/fake/dir/subdir/fake_file_5.wav"
-        ]
+                ('/my/fake/dir', ["subdir"], ["fake_file_1.wav", "fake_file_2.txt"]),
+                ('/my/fake/dir/subdir', [], ["fake_file_3.aiff"])
+                ]
+        mock_AudioFileFinder__is_supported_audio_file.side_effect = [True, False, True]
 
-        self.assertEqual(self.audio_file_finder.find(self.fake_start_dir), expected_result)
+        fake_output = self.audio_file_finder.find(self.fake_start_dir)
+
+        expected_output = [
+                '/my/fake/dir/fake_file_1.wav',
+                '/my/fake/dir/subdir/fake_file_3.aiff'
+                ]
+
         mock_abspath.assert_called_once_with(self.fake_start_dir)
         mock_walk.assert_called_once_with(self.fake_start_dir)
+        mock_AudioFileFinder__is_supported_audio_file.assert_has_calls([
+            mock.call("fake_file_1.wav"),
+            mock.call("fake_file_2.txt"),
+            mock.call("fake_file_3.aiff")
+            ])
 
+        self.assertEqual(fake_output, expected_output)
 
-    def test_is_supported_audio_file(self):
-        self.assertTrue(self.audio_file_finder._AudioFileFinder__is_supported_audio_file("fake_file_1.wav"))
-        self.assertTrue(self.audio_file_finder._AudioFileFinder__is_supported_audio_file("fake_file_2.aiff"))
+    @mock.patch('wavealign.data_collection.audio_file_finder.os.walk')
+    def test_find_functionality(self, mock_walk):
+        mock_walk.return_value = [
+                ('/my/fake/dir', ["subdir"], ["fake_file_1.wav", "fake_file_2.txt"]),
+                ('/my/fake/dir/subdir', [], ["fake_file_3.aiff"])
+                ]
 
-        self.assertFalse(self.audio_file_finder._AudioFileFinder__is_supported_audio_file("fake_file_3.mp3"))
-        self.assertFalse(self.audio_file_finder._AudioFileFinder__is_supported_audio_file("fake_file_4.txt"))
+        fake_output= self.audio_file_finder.find(self.fake_start_dir)
 
+        expected_output = [
+                '/my/fake/dir/fake_file_1.wav',
+                '/my/fake/dir/subdir/fake_file_3.aiff'
+                ]
+        
+        mock_walk.assert_called_once_with(self.fake_start_dir)
+        self.assertEqual(fake_output, expected_output)
