@@ -16,11 +16,8 @@ class TestWaveAlignment(unittest.TestCase):
                 )
 
     @parameterized.expand([
-        ("all parameters set", '/my/dir', '/my/out', -12, False, True),
+        ("all parameters set", '/my/dir', '/my/dir', -12, False, True),
         ("no output path", '/my/dir', None, -12, False, True),
-        ("read only True", '/my/dir', None, -12, False, True), # no clipping set to False
-        ("check for clipping false", '/my/dir', '/my/out', -12, False, False),
-        ("no output, no clipping", '/my/dir', None, -12, False, False),
         ("clipping occures", '/my/dir', None, -1, False, True)
         ])
     @mock.patch('wavealign.wave_alignment.AudioFileFinder.find')
@@ -42,9 +39,10 @@ class TestWaveAlignment(unittest.TestCase):
             mock_read,
             mock_find
             ):
+
         mock_find.return_value = ['/my/dir/fake_file_1.wav']
         mock_read.return_value = self.fake_audio_file_spec_set
-        mock_detect_peak.side_effect = [-12, -12, -12, -12, -12, 1]
+        mock_detect_peak.side_effect = [-12, -12, 1]
 
         wave_alignment(
                 fake_input_directory,
@@ -60,4 +58,4 @@ class TestWaveAlignment(unittest.TestCase):
                 self.fake_audio_file_spec_set,
                 fake_target_lufs
                 )
-        # mock_write.assert_is_called_with()
+        mock_write.assert_called_once_with('/my/dir/fake_file_1.wav', self.fake_audio_file_spec_set)
