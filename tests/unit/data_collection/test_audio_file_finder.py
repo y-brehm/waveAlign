@@ -44,7 +44,7 @@ class TestAudioFileFinder(unittest.TestCase):
                 ('/my/fake/dir/subdir', [], ["fake_file_3.aiff"])
                 ]
 
-        fake_output= self.audio_file_finder.find(self.fake_start_dir)
+        fake_output = self.audio_file_finder.find(self.fake_start_dir)
 
         expected_output = [
                 '/my/fake/dir/fake_file_1.wav',
