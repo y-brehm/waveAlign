@@ -58,4 +58,5 @@ class TestWaveAlignment(unittest.TestCase):
                 self.fake_audio_file_spec_set,
                 fake_target_lufs
                 )
+        mock_detect_peak.assert_called_once_with(self.fake_audio_file_spec_set.audio_data)
         mock_write.assert_called_once_with('/my/dir/fake_file_1.wav', self.fake_audio_file_spec_set)
