@@ -15,7 +15,7 @@ class AudioFileHandler:
         artwork = metadata['artwork']
 
         sample_rate, audio = ffmpegio.audio.read(file_path)
-        if audio.dtype.kind == 'i':
+        if self.__pcm_float_converter.is_pcm_encoded(audio):
             audio = self.__pcm_float_converter.pcm_to_float(audio)
 
         original_lufs = calculate_lufs(audio, sample_rate)
@@ -35,7 +35,7 @@ class AudioFileHandler:
 
         audio = audio_file_spec_set.audio_data
 
-        if audio.dtype.kind == 'i':
+        if self.__pcm_float_converter.is_pcm_encoded(audio):
             audio = self.__pcm_float_converter.float_to_pcm(audio)
 
         ffmpegio.audio.write(

@@ -2,6 +2,9 @@ from numpy import ndarray, iinfo
 
 
 class PcmFloatConverter:
+    def is_pcm_encoded(self, signal: ndarray) -> bool:
+        return signal.dtype.kind == 'i'
+
     def pcm_to_float(self, pcm_signal: ndarray) -> ndarray:
         abs_max, offset, _, _ = self.__get_array_info(pcm_signal,
                                                       pcm_signal.dtype)
