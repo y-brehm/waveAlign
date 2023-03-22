@@ -1,6 +1,6 @@
-from music_tag import load_file
 import ffmpegio
 
+from music_tag import load_file
 from wavealign.loudness_processing.calculation import calculate_lufs
 from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
 from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
@@ -45,7 +45,5 @@ class AudioFileHandler:
             )
 
         metadata = load_file(file_path)
-        # TODO: add artwork edge case handling for m4a
-        if not file_path.endswith('m4a'):
-            metadata['artwork'] = audio_file_spec_set.artwork
+        metadata['artwork'] = audio_file_spec_set.artwork
         metadata.save()
