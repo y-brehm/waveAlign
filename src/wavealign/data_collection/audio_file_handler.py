@@ -1,13 +1,11 @@
 from music_tag import load_file
 import ffmpegio
-from os.path import splitext
 
 from wavealign.loudness_processing.calculation import calculate_lufs
 from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
 from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
 
 
-# TODO: add support for ALAC
 class AudioFileHandler:
     def __init__(self) -> None:
         self.__pcm_float_converter = PcmFloatConverter()
@@ -17,7 +15,7 @@ class AudioFileHandler:
         artwork = metadata['artwork']
 
         sample_rate, audio = ffmpegio.audio.read(file_path)
-        if self.__is_pcm_container(file_path):
+        if audio.dtype.kind == 'i':
             audio = self.__pcm_float_converter.pcm_to_float(audio)
 
         original_lufs = calculate_lufs(audio, sample_rate)
@@ -37,7 +35,7 @@ class AudioFileHandler:
 
         audio = audio_file_spec_set.audio_data
 
-        if self.__is_pcm_container(file_path):
+        if audio.dtype.kind == 'i':
             audio = self.__pcm_float_converter.float_to_pcm(audio)
 
         ffmpegio.audio.write(
@@ -51,8 +49,3 @@ class AudioFileHandler:
         if not file_path.endswith('m4a'):
             metadata['artwork'] = audio_file_spec_set.artwork
         metadata.save()
-
-    def __is_pcm_container(self, file_path: str) -> bool:
-        file_extension = splitext(file_path)[1]
-
-        return file_extension in ['.wav', '.aiff', '.flac']
