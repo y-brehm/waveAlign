@@ -1,38 +1,31 @@
-import ffmpegio
-
+from ffmpegio import audio
 from music_tag import load_file
+
 from wavealign.loudness_processing.calculation import calculate_lufs
 from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
 from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
+from wavealign.data_collection.metadata_extractor import MetaDataExtractor
 
 
 class AudioFileHandler:
     def __init__(self) -> None:
         self.__pcm_float_converter = PcmFloatConverter()
+        self.__metadata_extractor = MetaDataExtractor()
 
     def read(self, file_path: str) -> AudioFileSpecSet:
-        metadata = load_file(file_path)
-        artwork = metadata['artwork']
+        _, audio_data = audio.read(file_path)
 
-        sample_rate, audio = ffmpegio.audio.read(file_path)
-        if self.__pcm_float_converter.is_pcm_encoded(audio):
-            audio = self.__pcm_float_converter.pcm_to_float(audio)
+        if self.__pcm_float_converter.is_pcm_encoded(audio_data):
+            audio_data = self.__pcm_float_converter.pcm_to_float(audio_data)
 
-        original_lufs = calculate_lufs(audio, sample_rate)
-
-        audio_metadata = ffmpegio.probe.full_details(file_path)
-        audio_stream_metadata = audio_metadata['streams'][0]
-        codec_name = audio_stream_metadata['codec_name']
-        bit_rate = self.__get_bitrate_specifier(audio_metadata)
+        metadata = self.__metadata_extractor.extract(file_path)
+        original_lufs = calculate_lufs(audio_data, metadata.sample_rate)
 
         return AudioFileSpecSet(
             file_path=file_path,
-            audio_data=audio,
-            sample_rate=int(sample_rate),
-            artwork=artwork,
+            audio_data=audio_data,
             original_lufs=original_lufs,
-            codec_name=codec_name,
-            bit_rate=bit_rate
+            metadata=metadata
             )
 
     def write(self,
@@ -40,27 +33,22 @@ class AudioFileHandler:
               audio_file_spec_set: AudioFileSpecSet
               ) -> None:
 
-        audio = audio_file_spec_set.audio_data
+        audio_data = audio_file_spec_set.audio_data
 
-        if self.__pcm_float_converter.is_pcm_encoded(audio):
-            audio = self.__pcm_float_converter.float_to_pcm(audio)
+        if self.__pcm_float_converter.is_pcm_encoded(audio_data):
+            audio_data = self.__pcm_float_converter.float_to_pcm(audio_data)
 
-        ffmpegio.audio.write(
+        audio.write(
             file_path,
-            audio_file_spec_set.sample_rate,
-            audio,
-            c=audio_file_spec_set.codec_name,
+            audio_file_spec_set.metadata.sample_rate,
+            audio_data,
+            c=audio_file_spec_set.metadata.codec_name,
             overwrite=True,
-            ac=2,
-            ab=audio_file_spec_set.bit_rate,
+            ac=audio_file_spec_set.metadata.num_channels,
+            ab=audio_file_spec_set.metadata.bit_rate,
             write_id3v2=True,
             )
 
         metadata = load_file(file_path)
-        metadata['artwork'] = audio_file_spec_set.artwork
+        metadata['artwork'] = audio_file_spec_set.metadata.artwork
         metadata.save()
-
-    def __get_bitrate_specifier(self, audio_metadata: dict) -> str:
-        for metadata in audio_metadata.values():
-            if isinstance(metadata, dict) and 'bit_rate' in metadata:
-                return f"{metadata['bit_rate'] / 1000}k"
