@@ -2,3 +2,5 @@ numpy==1.22.0
 pyloudnorm==0.1.1
 music-tag==0.4.3
 soundfile==0.12.1
+ffmpegio==0.8.3
+Pillow==9.4.0

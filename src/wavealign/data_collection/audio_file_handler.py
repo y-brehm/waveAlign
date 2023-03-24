@@ -19,6 +19,8 @@ class AudioFileHandler:
             audio = self.__pcm_float_converter.pcm_to_float(audio)
 
         original_lufs = calculate_lufs(audio, sample_rate)
+        audio_metadata = ffmpegio.probe.full_details(file_path)
+        codec_name = audio_metadata['streams'][0]['codec_name']
 
         return AudioFileSpecSet(
             file_path=file_path,
@@ -26,6 +28,7 @@ class AudioFileHandler:
             sample_rate=int(sample_rate),
             artwork=artwork,
             original_lufs=original_lufs,
+            codec_name=codec_name
             )
 
     def write(self,
@@ -42,6 +45,7 @@ class AudioFileHandler:
             file_path,
             audio_file_spec_set.sample_rate,
             audio,
+            c=audio_file_spec_set.codec_name,
             overwrite=True,
             ac=2,
             q=0,

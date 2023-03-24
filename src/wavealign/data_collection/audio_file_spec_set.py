@@ -9,3 +9,4 @@ class AudioFileSpecSet:
     original_lufs: float
     sample_rate: int
     artwork: bytearray
+    codec_name: str
