@@ -19,9 +19,11 @@ class AudioFileHandler:
             audio = self.__pcm_float_converter.pcm_to_float(audio)
 
         original_lufs = calculate_lufs(audio, sample_rate)
+
         audio_metadata = ffmpegio.probe.full_details(file_path)
-        codec_name = audio_metadata['streams'][0]['codec_name']
-        print(audio_metadata)
+        audio_stream_metadata = audio_metadata['streams'][0]
+        codec_name = audio_stream_metadata['codec_name']
+        bit_rate = self.__get_bitrate_specifier(audio_metadata)
 
         return AudioFileSpecSet(
             file_path=file_path,
@@ -29,7 +31,8 @@ class AudioFileHandler:
             sample_rate=int(sample_rate),
             artwork=artwork,
             original_lufs=original_lufs,
-            codec_name=codec_name
+            codec_name=codec_name,
+            bit_rate=bit_rate
             )
 
     def write(self,
@@ -49,10 +52,15 @@ class AudioFileHandler:
             c=audio_file_spec_set.codec_name,
             overwrite=True,
             ac=2,
-            ab='320k',
+            ab=audio_file_spec_set.bit_rate,
             write_id3v2=True,
             )
 
         metadata = load_file(file_path)
         metadata['artwork'] = audio_file_spec_set.artwork
         metadata.save()
+
+    def __get_bitrate_specifier(self, audio_metadata: dict) -> str:
+        for metadata in audio_metadata.values():
+            if isinstance(metadata, dict) and 'bit_rate' in metadata:
+                return f"{metadata['bit_rate'] / 1000}k"

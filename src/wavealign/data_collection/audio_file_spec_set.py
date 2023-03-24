@@ -10,3 +10,4 @@ class AudioFileSpecSet:
     sample_rate: int
     artwork: bytearray
     codec_name: str
+    bit_rate: int
