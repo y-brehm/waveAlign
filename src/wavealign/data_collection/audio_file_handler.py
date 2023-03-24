@@ -21,6 +21,7 @@ class AudioFileHandler:
         original_lufs = calculate_lufs(audio, sample_rate)
         audio_metadata = ffmpegio.probe.full_details(file_path)
         codec_name = audio_metadata['streams'][0]['codec_name']
+        print(audio_metadata)
 
         return AudioFileSpecSet(
             file_path=file_path,
@@ -48,7 +49,7 @@ class AudioFileHandler:
             c=audio_file_spec_set.codec_name,
             overwrite=True,
             ac=2,
-            q=0,
+            ab='320k',
             write_id3v2=True,
             )
 
