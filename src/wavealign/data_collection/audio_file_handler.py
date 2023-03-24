@@ -41,7 +41,11 @@ class AudioFileHandler:
         ffmpegio.audio.write(
             file_path,
             audio_file_spec_set.sample_rate,
-            audio
+            audio,
+            overwrite=True,
+            ac=2,
+            q=0,
+            write_id3v2=True,
             )
 
         metadata = load_file(file_path)
