@@ -1,7 +1,7 @@
 import numpy as np
 
-from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
-from wavealign.loudness_processing.calculation import calculate_gain_difference_to_target
+from src.wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
+from src.wavealign.loudness_processing.calculation import calculate_gain_difference_to_target
 
 
 def align_waveform_to_target(audio_file_spec_set: AudioFileSpecSet, target_lufs: int):

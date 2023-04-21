@@ -1,10 +1,10 @@
 import mock
 import unittest
 
-from wavealign.data_collection.audio_file_finder import AudioFileFinder
+from src.wavealign.data_collection.audio_file_finder import AudioFileFinder
+
 
 class TestAudioFileFinder(unittest.TestCase):
-
     def setUp(self):
         self.audio_file_finder = AudioFileFinder()
         self.fake_start_dir = '/my/fake/dir'
@@ -16,10 +16,10 @@ class TestAudioFileFinder(unittest.TestCase):
                 '/my/fake/dir/fake_file_1.wav',
                 '/my/fake/dir/subdir/fake_file_3.aiff'
                 ]
-    
-    @mock.patch('wavealign.data_collection.audio_file_finder.os.path.abspath')
-    @mock.patch('wavealign.data_collection.audio_file_finder.os.walk')
-    @mock.patch('wavealign.data_collection.audio_file_finder.AudioFileFinder._AudioFileFinder__is_supported_audio_file')
+
+    @mock.patch('src.wavealign.data_collection.audio_file_finder.os.path.abspath')
+    @mock.patch('src.wavealign.data_collection.audio_file_finder.os.walk')
+    @mock.patch('src.wavealign.data_collection.audio_file_finder.AudioFileFinder._AudioFileFinder__is_supported_audio_file')
     def test_find_calls(self, mock_AudioFileFinder__is_supported_audio_file, mock_walk, mock_abspath):
         mock_abspath.return_value = self.fake_start_dir
         mock_walk.return_value = self.fake_file_dir
@@ -37,7 +37,7 @@ class TestAudioFileFinder(unittest.TestCase):
 
         self.assertEqual(fake_output, self.expected_output)
 
-    @mock.patch('wavealign.data_collection.audio_file_finder.os.walk')
+    @mock.patch('src.wavealign.data_collection.audio_file_finder.os.walk')
     def test_find_functionality(self, mock_walk):
         mock_walk.return_value = self.fake_file_dir
 

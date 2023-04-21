@@ -6,5 +6,5 @@ class AudioMetadata:
     num_channels: float
     artwork: bytearray
     codec_name: str
-    bit_rate: int
+    bit_rate: str
     sample_rate: int
