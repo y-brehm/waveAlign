@@ -27,10 +27,10 @@ class TestCalculation(unittest.TestCase):
         mock_gain_to_db.assert_called_once_with(5)
 
     @parameterized.expand([
-        ("louder target than input", -12, -10, 1.258925, 2),
-        ("louder input than target", -10, -12, 0.794328, -2),
-        ("no loudness difference", -12, -12, 0, 0),
-        ("zero case", 0, 0, 0, 0)
+        ('louder target than input', -12, -10, 1.258925, 2),
+        ('louder input than target', -10, -12, 0.794328, -2),
+        ('no loudness difference', -12, -12, 0, 0),
+        ('zero case', 0, 0, 0, 0)
         ])
     @mock.patch('src.wavealign.loudness_processing.calculation.db_to_gain')
     def test_calculate_gain_difference_to_target(
@@ -69,20 +69,20 @@ class TestCalculation(unittest.TestCase):
         mock_np_log.assert_called_once_with(fake_gain)
 
     @parameterized.expand([
-        ("base case", 5, 13.979400086720377),
-        ("low case", 1, 0),
-        ("high case", 30, 29.54242509439325),
-        ("zero case", 0, -math.inf),
+        ('base case', 5, 13.979400086720377),
+        ('low case', 1, 0),
+        ('high case', 30, 29.54242509439325),
+        ('zero case', 0, -math.inf),
         ])
     def test_gain_to_db_values(self, test_case, fake_gain, expected):
         fake_db = gain_to_db(fake_gain)
         np.testing.assert_almost_equal(fake_db, expected)
 
     @parameterized.expand([
-        ("base case", 5, 1.7782794100389228),
-        ("low case", 1, 1.1220184543019633),
-        ("high case", 30, 31.622776601683793),
-        ("zero case", 0, 1),
+        ('base case', 5, 1.7782794100389228),
+        ('low case', 1, 1.1220184543019633),
+        ('high case', 30, 31.622776601683793),
+        ('zero case', 0, 1),
     ])
     def test_db_to_gain_values(self, test_case, fake_db, expected):
         fake_gain = db_to_gain(fake_db)

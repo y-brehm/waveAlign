@@ -38,7 +38,7 @@ class TestWaveAlignment(unittest.TestCase):
     def test_wave_alignment_read_only(self):
         wave_alignment(
                 input_path=self.fake_input_path,
-                output_path="",
+                output_path='',
                 target_lufs=-14,
                 read_only=True,
                 check_for_clipping=False
@@ -53,7 +53,7 @@ class TestWaveAlignment(unittest.TestCase):
     def test_wave_alignment_write_no_clipping(self):
         wave_alignment(
                 input_path=self.fake_input_path,
-                output_path="",
+                output_path='',
                 target_lufs=-14,
                 read_only=False,
                 check_for_clipping=False
@@ -102,7 +102,7 @@ class TestWaveAlignment(unittest.TestCase):
         with self.assertRaises((AssertionError, Exception)):
             wave_alignment(
                     input_path=self.fake_input_path,
-                    output_path="",
+                    output_path='',
                     target_lufs=-14,
                     read_only=False,
                     check_for_clipping=True
