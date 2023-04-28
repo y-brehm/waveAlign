@@ -15,7 +15,7 @@ class PcmFloatConverter:
                 - array_type_info.offset) / array_type_info.abs_max
 
     def float_to_pcm(self, float_array: ndarray) -> ndarray:
-        output_dtype = 'int16'
+        output_dtype = 'int32'
         array_type_info = self.__get_array_type_info(
             output_dtype
             )

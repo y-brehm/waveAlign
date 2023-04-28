@@ -14,8 +14,6 @@ class MetaDataExtractor:
         audio_stream_metadata = full_details['streams'][0]
         bit_rate = self.__get_bitrate_specifier(audio_stream_metadata['bit_rate'])
 
-        print(audio_stream_metadata)
-
         return AudioMetadata(
             num_channels=audio_stream_metadata['channels'],
             artwork=tag_metadata['artwork'],
