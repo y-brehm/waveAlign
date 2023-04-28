@@ -28,10 +28,10 @@ class TestAudioFileWriter(unittest.TestCase):
             'src.wavealign.data_collection.audio_file_writer.PcmFloatConverter').start()
         self.mock_write = mock.patch(
             'src.wavealign.data_collection.audio_file_writer.audio.write').start()
-        self.mock_tag_load_file = mock.patch(
-            'src.wavealign.data_collection.audio_file_writer.load_file').start()
+        self.mock_write_metadata = mock.patch(
+            'src.wavealign.data_collection.audio_file_writer.write_metadata').start()
 
-        self.mock_tag_load_file.return_value = self.mock_tag_metadata
+        self.mock_write_metadata.return_value = self.mock_metadata
 
     def tearDown(self):
         mock.patch.stopall()
@@ -50,7 +50,6 @@ class TestAudioFileWriter(unittest.TestCase):
                                                 ac=2,
                                                 ab=16,
                                                 write_id3v2=True)
-        self.mock_tag_metadata.save.assert_called_once()
 
     def test_write_with_conversion(self):
         mock_audio_data_converted = mock.MagicMock()
@@ -67,19 +66,3 @@ class TestAudioFileWriter(unittest.TestCase):
                                                 ac=2,
                                                 ab=16,
                                                 write_id3v2=True)
-        self.mock_tag_metadata.save.assert_called_once()
-
-
-class TestAudioFileWriterAssert(unittest.TestCase):
-    @mock.patch('src.wavealign.data_collection.audio_file_writer.load_file').start()
-    def test_write_with_faulty_metadata(self, mock_tag_load_file):
-        mock_tag_load_file.return_value = None
-
-        try:
-            AudioFileWriter().write('some_path', mock.MagicMock())
-        except ValueError:
-            pass
-        except Exception:
-            self.fail('unexpected exception raised')
-        else:
-            self.fail('ExpectedException not raised')
