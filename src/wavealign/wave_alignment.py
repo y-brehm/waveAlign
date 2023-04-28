@@ -1,10 +1,10 @@
 import os
 
-from src.wavealign.data_collection.audio_file_reader import AudioFileReader
-from src.wavealign.data_collection.audio_file_writer import AudioFileWriter
-from src.wavealign.data_collection.audio_file_finder import AudioFileFinder
-from src.wavealign.loudness_processing.align_waveform_to_target import align_waveform_to_target
-from src.wavealign.loudness_processing.calculation import detect_peak
+from wavealign.data_collection.audio_file_reader import AudioFileReader
+from wavealign.data_collection.audio_file_writer import AudioFileWriter
+from wavealign.data_collection.audio_file_finder import AudioFileFinder
+from wavealign.loudness_processing.align_waveform_to_target import align_waveform_to_target
+from wavealign.loudness_processing.calculation import detect_peak
 
 
 def wave_alignment(

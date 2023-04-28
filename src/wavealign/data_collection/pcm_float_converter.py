@@ -1,6 +1,6 @@
 from numpy import ndarray, iinfo
 
-from src.wavealign.data_collection.array_type_info import ArrayTypeInfo
+from wavealign.data_collection.array_type_info import ArrayTypeInfo
 
 
 class PcmFloatConverter:

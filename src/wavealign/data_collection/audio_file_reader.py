@@ -1,10 +1,10 @@
 from ffmpegio import audio
 from numpy import ndarray
 
-from src.wavealign.loudness_processing.calculation import calculate_lufs
-from src.wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
-from src.wavealign.data_collection.pcm_float_converter import PcmFloatConverter
-from src.wavealign.data_collection.metadata_extractor import MetaDataExtractor
+from wavealign.loudness_processing.calculation import calculate_lufs
+from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
+from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
+from wavealign.data_collection.metadata_extractor import MetaDataExtractor
 
 
 class AudioFileReader:

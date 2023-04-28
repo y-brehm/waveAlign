@@ -1,8 +1,8 @@
 from ffmpegio import audio
 
-from src.wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
-from src.wavealign.data_collection.pcm_float_converter import PcmFloatConverter
-from src.wavealign.data_collection.write_metadata import write_metadata
+from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
+from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
+from wavealign.data_collection.write_metadata import write_metadata
 
 
 class AudioFileWriter:

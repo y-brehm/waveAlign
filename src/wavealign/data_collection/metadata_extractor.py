@@ -1,7 +1,7 @@
 from music_tag import load_file
 from ffmpegio import probe
 
-from src.wavealign.data_collection.audio_metadata import AudioMetadata
+from wavealign.data_collection.audio_metadata import AudioMetadata
 
 
 class MetaDataExtractor:
@@ -13,6 +13,8 @@ class MetaDataExtractor:
         full_details = probe.full_details(file_path)
         audio_stream_metadata = full_details['streams'][0]
         bit_rate = self.__get_bitrate_specifier(audio_stream_metadata['bit_rate'])
+
+        print(audio_stream_metadata)
 
         return AudioMetadata(
             num_channels=audio_stream_metadata['channels'],

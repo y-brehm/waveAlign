@@ -1,6 +1,6 @@
 from music_tag import load_file
 
-from src.wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
+from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
 
 
 def write_metadata(audio_file_spec_set: AudioFileSpecSet,

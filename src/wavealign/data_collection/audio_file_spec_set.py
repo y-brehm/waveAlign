@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from numpy import ndarray
 
-from src.wavealign.data_collection.audio_metadata import AudioMetadata
+from wavealign.data_collection.audio_metadata import AudioMetadata
 
 
 @dataclass
