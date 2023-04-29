@@ -1,9 +1,9 @@
 import mock
 import unittest
 
-from src.wavealign.data_collection.audio_file_writer import AudioFileWriter
-from src.wavealign.data_collection.audio_metadata import AudioMetadata
-from src.wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
+from wavealign.data_collection.audio_file_writer import AudioFileWriter
+from wavealign.data_collection.audio_metadata import AudioMetadata
+from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
 
 
 class TestAudioFileWriter(unittest.TestCase):
@@ -25,11 +25,11 @@ class TestAudioFileWriter(unittest.TestCase):
         self.mock_tag_metadata = mock.MagicMock()
 
         self.mock_pcm_float_converter = mock.patch(
-            'src.wavealign.data_collection.audio_file_writer.PcmFloatConverter').start()
+            'wavealign.data_collection.audio_file_writer.PcmFloatConverter').start()
         self.mock_write = mock.patch(
-            'src.wavealign.data_collection.audio_file_writer.audio.write').start()
+            'wavealign.data_collection.audio_file_writer.audio.write').start()
         self.mock_write_metadata = mock.patch(
-            'src.wavealign.data_collection.audio_file_writer.write_metadata').start()
+            'wavealign.data_collection.audio_file_writer.write_metadata').start()
 
         self.mock_write_metadata.return_value = self.mock_metadata
 

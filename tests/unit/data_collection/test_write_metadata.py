@@ -1,10 +1,10 @@
 import mock
 import unittest
 
-from src.wavealign.data_collection.write_metadata import write_metadata
+from wavealign.data_collection.write_metadata import write_metadata
 
 
-@mock.patch('src.wavealign.data_collection.write_metadata.load_file')
+@mock.patch('wavealign.data_collection.write_metadata.load_file')
 class TestWriteMetadata(unittest.TestCase):
     def test_write_valid_metadata(self, mock_tag_load_file):
         mock_metadata = mock.MagicMock()

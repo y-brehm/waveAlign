@@ -3,13 +3,13 @@ import mock
 from numpy import array, int16, float32
 from numpy.testing import assert_almost_equal
 
-from src.wavealign.data_collection.pcm_float_converter import PcmFloatConverter
+from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
 
 
 class TestPcmFloatConverter(unittest.TestCase):
     def setUp(self):
         self.mock_iinfo = mock.patch(
-            'src.wavealign.data_collection.pcm_float_converter.iinfo').start()
+            'wavealign.data_collection.pcm_float_converter.iinfo').start()
 
     def tearDown(self):
         mock.patch.stopall()

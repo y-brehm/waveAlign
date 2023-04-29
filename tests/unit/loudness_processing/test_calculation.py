@@ -5,13 +5,13 @@ import numpy as np
 
 from parameterized import parameterized
 
-from src.wavealign.loudness_processing.calculation import \
+from wavealign.loudness_processing.calculation import \
     calculate_gain_difference_to_target, detect_peak, calculate_lufs, gain_to_db, db_to_gain
 
 
 class TestCalculation(unittest.TestCase):
-    @mock.patch('src.wavealign.loudness_processing.calculation.np.amax')
-    @mock.patch('src.wavealign.loudness_processing.calculation.gain_to_db')
+    @mock.patch('wavealign.loudness_processing.calculation.np.amax')
+    @mock.patch('wavealign.loudness_processing.calculation.gain_to_db')
     def test_detect_peak(self, mock_gain_to_db, mock_amax):
         fake_input = [[0, 1, 2], [3, 4, 5]]
         mock_amax.side_effect = [2, 5, 5]
@@ -32,7 +32,7 @@ class TestCalculation(unittest.TestCase):
         ('no loudness difference', -12, -12, 0, 0),
         ('zero case', 0, 0, 0, 0)
         ])
-    @mock.patch('src.wavealign.loudness_processing.calculation.db_to_gain')
+    @mock.patch('wavealign.loudness_processing.calculation.db_to_gain')
     def test_calculate_gain_difference_to_target(
             self,
             test_case,
@@ -51,7 +51,7 @@ class TestCalculation(unittest.TestCase):
         mock_db_to_gain.assert_called_once_with(fake_output_level)
         self.assertEqual(fake_output, fake_output_gain)
 
-    @mock.patch('src.wavealign.loudness_processing.calculation.Meter')
+    @mock.patch('wavealign.loudness_processing.calculation.Meter')
     def test_calculate_lufs(self, mock_meter):
         mock_pyln_meter = mock.MagicMock()
         fake_input = [0, 1, 2]
@@ -62,7 +62,7 @@ class TestCalculation(unittest.TestCase):
         calculate_lufs(fake_input, fake_sr)
         mock_pyln_meter.integrated_loudness.assert_called_once_with(fake_input)
 
-    @mock.patch('src.wavealign.loudness_processing.calculation.np.log10')
+    @mock.patch('wavealign.loudness_processing.calculation.np.log10')
     def test_gain_to_db(self, mock_np_log):
         fake_gain = -5
         gain_to_db(fake_gain)

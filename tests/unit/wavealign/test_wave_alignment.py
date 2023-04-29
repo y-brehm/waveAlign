@@ -1,8 +1,8 @@
 import mock
 import unittest
 
-from src.wavealign.wave_alignment import wave_alignment
-from src.wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
+from wavealign.wave_alignment import wave_alignment
+from wavealign.data_collection.audio_file_spec_set import AudioFileSpecSet
 
 
 class TestWaveAlignment(unittest.TestCase):
@@ -19,18 +19,18 @@ class TestWaveAlignment(unittest.TestCase):
                 )
 
         self.mock_normpath = mock.patch(
-                'src.wavealign.wave_alignment.os.path.normpath',
+                'wavealign.wave_alignment.os.path.normpath',
                 return_value='/my/dir').start()
         self.mock_find = mock.patch(
-                'src.wavealign.wave_alignment.AudioFileFinder.find',
+                'wavealign.wave_alignment.AudioFileFinder.find',
                 return_value=['/my/dir/fake_file_1.wav']).start()
         self.mock_write = mock.patch(
-                'src.wavealign.wave_alignment.AudioFileWriter.write').start()
+                'wavealign.wave_alignment.AudioFileWriter.write').start()
         self.mock_read = mock.patch(
-                'src.wavealign.wave_alignment.AudioFileReader.read',
+                'wavealign.wave_alignment.AudioFileReader.read',
                 return_value=self.fake_audio_file_spec_set).start()
         self.mock_align_waveform_to_target = mock.patch(
-                'src.wavealign.wave_alignment.align_waveform_to_target').start()
+                'wavealign.wave_alignment.align_waveform_to_target').start()
 
     def tearDown(self):
         mock.patch.stopall()
@@ -95,7 +95,7 @@ class TestWaveAlignment(unittest.TestCase):
                 self.fake_audio_file_spec_set
                 )
 
-    @mock.patch('src.wavealign.wave_alignment.detect_peak')
+    @mock.patch('wavealign.wave_alignment.detect_peak')
     def test_wave_alignment_detect_clipping(self, mock_detect_peak):
         mock_detect_peak.return_value = 1
 

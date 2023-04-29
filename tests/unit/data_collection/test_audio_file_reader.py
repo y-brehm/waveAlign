@@ -1,8 +1,8 @@
 import mock
 import unittest
 
-from src.wavealign.data_collection.audio_file_reader import AudioFileReader
-from src.wavealign.data_collection.audio_metadata import AudioMetadata
+from wavealign.data_collection.audio_file_reader import AudioFileReader
+from wavealign.data_collection.audio_metadata import AudioMetadata
 
 
 class TestAudioFileReader(unittest.TestCase):
@@ -17,13 +17,13 @@ class TestAudioFileReader(unittest.TestCase):
             sample_rate=44100)
 
         self.mock_pcm_float_converter = mock.patch(
-            'src.wavealign.data_collection.audio_file_reader.PcmFloatConverter').start()
+            'wavealign.data_collection.audio_file_reader.PcmFloatConverter').start()
         self.mock_extract = mock.patch(
-            'src.wavealign.data_collection.audio_file_reader.MetaDataExtractor.extract').start()
+            'wavealign.data_collection.audio_file_reader.MetaDataExtractor.extract').start()
         self.mock_calculate_lufs = mock.patch(
-            'src.wavealign.data_collection.audio_file_reader.calculate_lufs').start()
+            'wavealign.data_collection.audio_file_reader.calculate_lufs').start()
         self.mock_read = mock.patch(
-            'src.wavealign.data_collection.audio_file_reader.audio.read').start()
+            'wavealign.data_collection.audio_file_reader.audio.read').start()
 
         self.mock_extract.return_value = self.mock_metadata
         self.mock_read.return_value = (44100, self.mock_audio_data)

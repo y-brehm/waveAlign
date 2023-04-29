@@ -1,8 +1,8 @@
 import mock
 import unittest
 
-from src.wavealign.data_collection.metadata_extractor import MetaDataExtractor
-from src.wavealign.data_collection.audio_metadata import AudioMetadata
+from wavealign.data_collection.metadata_extractor import MetaDataExtractor
+from wavealign.data_collection.audio_metadata import AudioMetadata
 
 
 class TestMetadataExtractor(unittest.TestCase):
@@ -21,9 +21,9 @@ class TestMetadataExtractor(unittest.TestCase):
         }
 
         self.mock_probe_details = mock.patch(
-            'src.wavealign.data_collection.metadata_extractor.probe.full_details').start()
+            'wavealign.data_collection.metadata_extractor.probe.full_details').start()
         self.mock_tag_load_file = mock.patch(
-            'src.wavealign.data_collection.metadata_extractor.load_file').start()
+            'wavealign.data_collection.metadata_extractor.load_file').start()
 
         self.mock_tag_load_file.return_value = self.mock_tag_metadata
         self.mock_probe_details.return_value = self.mock_details
@@ -45,7 +45,7 @@ class TestMetadataExtractor(unittest.TestCase):
 
 
 class TestMetadataExtractorAssert(unittest.TestCase):
-    @mock.patch('src.wavealign.data_collection.metadata_extractor.load_file').start()
+    @mock.patch('wavealign.data_collection.metadata_extractor.load_file').start()
     def test_write_with_faulty_metadata(self, mock_tag_load_file):
         mock_tag_load_file.return_value = None
 
