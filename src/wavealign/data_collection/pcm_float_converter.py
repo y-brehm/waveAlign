@@ -4,7 +4,8 @@ from wavealign.data_collection.array_type_info import ArrayTypeInfo
 
 
 class PcmFloatConverter:
-    def is_pcm_encoded(self, signal: ndarray) -> bool:
+    @staticmethod
+    def is_pcm_encoded(signal: ndarray) -> bool:
         return signal.dtype.kind == 'i'
 
     def pcm_to_float(self, pcm_signal: ndarray) -> ndarray:
@@ -27,7 +28,8 @@ class PcmFloatConverter:
 
         return normalized_array.astype(output_dtype)
 
-    def __get_array_type_info(self, dtype: str) -> ArrayTypeInfo:
+    @staticmethod
+    def __get_array_type_info(dtype: str) -> ArrayTypeInfo:
         array_info = iinfo(dtype)
         array_type_abs_max = 2 ** (array_info.bits - 1)
         offset = array_info.min + array_type_abs_max
