@@ -4,7 +4,7 @@ import mock
 from wavealign.loudness_processing.waveform_aligner import WaveformAligner
 
 
-class TestAlignWaveformToTarget(unittest.TestCase):
+class TestWaveformAligner(unittest.TestCase):
     @mock.patch('wavealign.loudness_processing.waveform_aligner.'
                 'LevelDifferenceCalculator.calculate_level_difference_to_target_in_db')
     @mock.patch('wavealign.loudness_processing.waveform_aligner.np.multiply')
