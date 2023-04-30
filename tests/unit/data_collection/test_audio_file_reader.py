@@ -13,21 +13,21 @@ class TestAudioFileReader(unittest.TestCase):
             num_channels=2,
             artwork=self.mock_artwork,
             codec_name='eva01',
-            bit_rate=16,
+            bit_rate='int16',
             sample_rate=44100)
 
         self.mock_pcm_float_converter = mock.patch(
             'wavealign.data_collection.audio_file_reader.PcmFloatConverter').start()
-        self.mock_extract = mock.patch(
+        self.mock_extract_metadata = mock.patch(
             'wavealign.data_collection.audio_file_reader.MetaDataExtractor.extract').start()
-        self.mock_calculate_lufs = mock.patch(
-            'wavealign.data_collection.audio_file_reader.calculate_lufs').start()
+        self.mock_extract_audio_level = mock.patch(
+            'wavealign.data_collection.audio_file_reader.AudioLevelExtractor.extract').start()
         self.mock_read = mock.patch(
             'wavealign.data_collection.audio_file_reader.audio.read').start()
 
-        self.mock_extract.return_value = self.mock_metadata
+        self.mock_extract_metadata.return_value = self.mock_metadata
         self.mock_read.return_value = (44100, self.mock_audio_data)
-        self.mock_calculate_lufs.return_value = -15
+        self.mock_extract_audio_level.return_value = -15
 
     def tearDown(self):
         mock.patch.stopall()
@@ -35,11 +35,12 @@ class TestAudioFileReader(unittest.TestCase):
     def test_read(self):
         self.mock_pcm_float_converter.return_value.is_pcm_encoded.return_value = False
 
-        file_spec_set = AudioFileReader().read('some_path')
+        file_spec_set = AudioFileReader().read('some_path', 2, mock.MagicMock())
 
+        self.mock_extract_audio_level.assert_called_once_with(self.mock_audio_data)
         self.assertEqual(file_spec_set.file_path, 'some_path')
         self.assertEqual(file_spec_set.audio_data, self.mock_audio_data)
-        self.assertAlmostEqual(file_spec_set.original_lufs, -15)
+        self.assertAlmostEqual(file_spec_set.original_audio_level, -15)
         self.assertEqual(file_spec_set.metadata, self.mock_metadata)
         self.mock_pcm_float_converter.return_value.pcm_to_float.assert_not_called()
 
@@ -48,9 +49,10 @@ class TestAudioFileReader(unittest.TestCase):
         self.mock_pcm_float_converter.return_value.pcm_to_float.return_value = mock_audio_data_converted
         self.mock_pcm_float_converter.return_value.is_pcm_encoded.return_value = True
 
-        file_spec_set = AudioFileReader().read('some_path')
+        file_spec_set = AudioFileReader().read('some_path', 2, mock.MagicMock())
 
+        self.mock_extract_audio_level.assert_called_once_with(mock_audio_data_converted)
         self.assertEqual(file_spec_set.file_path, 'some_path')
         self.assertEqual(file_spec_set.audio_data, mock_audio_data_converted)
-        self.assertAlmostEqual(file_spec_set.original_lufs, -15)
+        self.assertAlmostEqual(file_spec_set.original_audio_level, -15)
         self.assertEqual(file_spec_set.metadata, self.mock_metadata)

@@ -13,7 +13,7 @@ class WaveAlignmentProcessor:
         self.__audio_file_finder = AudioFileFinder()
         self.__audio_file_reader = AudioFileReader()
         self.__audio_file_writer = AudioFileWriter()
-        self.__wavform_aligner = WaveformAligner()
+        self.__waveform_aligner = WaveformAligner()
         self.__peak_calculator = PeakCalculator()
 
     def process(
@@ -34,7 +34,7 @@ class WaveAlignmentProcessor:
                 print(f"Processing file: {file_path}, original {gain_calculation_strategy.value}: "
                       f"{audio_file_spec_set.original_audio_level}")
                 if read_only is False:
-                    self.__wavform_aligner.align_waveform_to_target(audio_file_spec_set, target_level)
+                    self.__waveform_aligner.align_waveform_to_target(audio_file_spec_set, target_level)
                     if check_for_clipping:
                         peak_after_processing = self.__peak_calculator.calculate_level(audio_file_spec_set.audio_data)
                         print(f"new PEAK value after processing: {peak_after_processing} dBFS")
