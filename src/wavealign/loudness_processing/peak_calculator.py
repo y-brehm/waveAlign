@@ -10,4 +10,3 @@ class PeakCalculator(IAudioLevelCalculator):
 
     def calculate_level(self, audio_data: np.ndarray) -> float:
         return self.__db_gain_converter.gain_to_db(np.max(np.abs(audio_data)))
-
