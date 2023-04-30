@@ -1,6 +1,6 @@
 import argparse
 
-from wavealign.wave_alignment import wave_alignment
+from wave_alignment import wave_alignment
 
 
 def main():

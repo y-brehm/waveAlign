@@ -1,18 +1,18 @@
 # waveAlign
 Python repo for audio loudness matching to end the loudness war between DJs.
 
-# Installation
-Requires python3.9 installed on your system.
+#⚡️Requirements
+* [ffmpeg >= 5.1](https://ffmpeg.org/)
+* [python >= 3.9](https://www.python.org/)
 
+#📦Installation
 ```
 pip3 install git+https://github.com/y-brehm/waveAlign
 ```
 
-# Usage
-
-The current version only works with .wav files. All processed files will be stored with the original sample rate and a 16-bit integer bit depth.
-
+#🚀Usage
 For showing the argument parser help:
+
 ````
 python3 -m wavealign.batch_process_files -h
 ````
@@ -39,12 +39,12 @@ while checking for clipping:
 python3 -m wavealign.batch_process_files -i ./your/songs -o ./output -t -16  --check_for_clipping
 ````
 
-# Run Tests (for developers only)
+#✅Run Tests (for developers only)
 
-Requires dev_requirementes to be installed:
+Requires both `requirements.txt` and `dev_requirementes.txt` to be installed:
 
 ```
-pip3 install -r dev_requirementes.txt
+pip3 install -r requirementes.txt && pip3 install -r dev_requirementes.txt
 ```
 
 After that tests can be run from the main directory:
