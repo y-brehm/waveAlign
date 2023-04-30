@@ -1,6 +1,7 @@
 import argparse
 
-from wave_alignment import wave_alignment
+from wavealign.data_collection.gain_calculation_strategy import GainCalculationStrategy
+from wavealign.wave_alignment_processor import WaveAlignmentProcessor
 
 
 def main():
@@ -18,13 +19,32 @@ def main():
         '--output',
         help="Specify the output directory to save the processed data. "
              "If set to None the original data is overwritten."
-             "Nested folder structures will be  disolved.",
+             "Nested folder structures will be  dissolved.",
         type=str
+    )
+    parser.add_argument(
+        '-w',
+        '--window_size',
+        help="Specify the window size in seconds. Has to be between 0.1 and 10.0."
+             "If set to none, LUFS is calculated for the whole file.",
+        metavar='0.1 <= window_size <= 10.0',
+        type=float,
+        default=None
+    )
+    parser.add_argument(
+        '-g',
+        '--gain_calculation_strategy',
+        help="Specify the gain calculation strategy. Use 'PEAK' for peak based calculation, 'RMS' for rms based "
+             "calculation, 'LUFS' for LUFS based calculation. Default is LUFS.",
+        metavar='LUFS|PEAK|RMS',
+        default=GainCalculationStrategy.LUFS,
+        type=lambda value: GainCalculationStrategy(value),
+        choices=list(GainCalculationStrategy)
     )
     parser.add_argument(
         '-t',
         '--target',
-        help="Specify the target loudness level in dB LUFS. Has to be between -30 and -9.",
+        help="Specify the target loudness level in dB. Has to be between -30 and -9.",
         metavar='-30 <= target <= -10',
         choices=range(-30, -9),
         type=int,
@@ -48,17 +68,20 @@ def main():
     args = parser.parse_args()
 
     if args.read_only:
-        print(f"### PROCESSING STARTED! READ-ONLY MODE ACTIVE!")
+        print("### PROCESSING STARTED! READ-ONLY MODE ACTIVE!")
     else:
-        print(f"### PROCESSING STARTED! AIMING FOR NEW TARGET LUFS: {args.target} \n")
+        print(f"### PROCESSING STARTED! AIMING FOR NEW TARGET {args.gain_calculation_strategy.value}: {args.target} \n")
 
-    wave_alignment(
-            input_path=args.input,
-            output_path=args.output,
-            target_lufs=args.target,
-            read_only=args.read_only,
-            check_for_clipping=args.check_for_clipping
-            )
+    wave_alignment_processor = WaveAlignmentProcessor()
+    wave_alignment_processor.process(
+        input_path=args.input,
+        output_path=args.output,
+        window_size=args.window_size,
+        gain_calculation_strategy=args.gain_calculation_strategy,
+        target_level=args.target,
+        read_only=args.read_only,
+        check_for_clipping=args.check_for_clipping
+    )
 
     print("\n### PROCESSING SUCCESSFULLY FINISHED! THANK YOU FOR HELPING TO END THIS BULLSHIT! ###")
 
