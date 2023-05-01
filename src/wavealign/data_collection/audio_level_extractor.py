@@ -13,11 +13,9 @@ class AudioLevelExtractor:
                  sample_rate: int,
                  window_size: int,
                  ) -> None:
+        self.__sample_rate = sample_rate
         self.__window_size = window_size
-        self.__audio_level_calculator = \
-            LUFSCalculator(sample_rate) if gain_calculation_strategy == GainCalculationStrategy.LUFS \
-            else PeakCalculator() if gain_calculation_strategy == GainCalculationStrategy.PEAK \
-            else RmsCalculator()
+        self.__audio_level_calculator = self.__select_level_calculator(gain_calculation_strategy)
         self.__windowed_level_calculator = WindowedLevelCalculator(
             self.__window_size,
             sample_rate,
@@ -25,10 +23,17 @@ class AudioLevelExtractor:
         )
 
     def extract(self, audio_data: np.ndarray) -> float:
-        if self.__window_size is None:
-            audio_level = self.__audio_level_calculator.calculate_level(audio_data)
-        else:
-            loudest_window = self.__windowed_level_calculator.get_loudest_window(audio_data)
-            audio_level = self.__audio_level_calculator.calculate_level(loudest_window)
+        if not self.__window_size:
+            return self.__audio_level_calculator.calculate_level(audio_data)
 
-        return audio_level
+        loudest_window = self.__windowed_level_calculator.get_loudest_window(audio_data)
+
+        return self.__audio_level_calculator.calculate_level(loudest_window)
+
+    def __select_level_calculator(self, gain_calculation_strategy: GainCalculationStrategy):
+        if gain_calculation_strategy == GainCalculationStrategy.LUFS:
+            return LUFSCalculator(self.__sample_rate)
+        elif gain_calculation_strategy == GainCalculationStrategy.PEAK:
+            return PeakCalculator()
+        else:
+            return RmsCalculator()
