@@ -14,12 +14,12 @@ class TestAudioFileWriter(unittest.TestCase):
             num_channels=2,
             artwork=self.mock_artwork,
             codec_name='eva01',
-            bit_rate=16,
+            bit_rate='int16',
             sample_rate=44100)
         self.mock_spec_set = AudioFileSpecSet(
                 file_path='some_path',
                 audio_data=self.mock_audio_data,
-                original_lufs=-16,
+                original_audio_level=-16,
                 metadata=self.mock_metadata
                 )
         self.mock_tag_metadata = mock.MagicMock()
@@ -48,7 +48,7 @@ class TestAudioFileWriter(unittest.TestCase):
                                                 c='eva01',
                                                 overwrite=True,
                                                 ac=2,
-                                                ab=16,
+                                                ab='int16',
                                                 write_id3v2=True)
 
     def test_write_with_conversion(self):
@@ -64,5 +64,5 @@ class TestAudioFileWriter(unittest.TestCase):
                                                 c='eva01',
                                                 overwrite=True,
                                                 ac=2,
-                                                ab=16,
+                                                ab='int16',
                                                 write_id3v2=True)
