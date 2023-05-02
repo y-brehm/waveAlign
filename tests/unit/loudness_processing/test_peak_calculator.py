@@ -8,7 +8,7 @@ from wavealign.loudness_processing.peak_calculator import PeakCalculator
 class TestPeakCalculator(unittest.TestCase):
     @mock.patch('wavealign.loudness_processing.peak_calculator.np.abs')
     @mock.patch('wavealign.loudness_processing.peak_calculator.np.max')
-    @mock.patch('wavealign.loudness_processing.peak_calculator.DbGainConverter.gain_to_db')
+    @mock.patch('wavealign.loudness_processing.peak_calculator.gain_to_db')
     def test_detect_peak(self, mock_gain_to_db, mock_np_max, mock_np_abs):
         fake_input = np.asarray([[0, -1, 2], [3, 4, -5]])
 

@@ -13,7 +13,7 @@ class TestAudioFileReader(unittest.TestCase):
             num_channels=2,
             artwork=self.mock_artwork,
             codec_name='eva01',
-            bit_rate='int16',
+            bit_rate='16k',
             sample_rate=44100)
 
         self.mock_pcm_float_converter = mock.patch(

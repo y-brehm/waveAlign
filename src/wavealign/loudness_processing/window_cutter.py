@@ -21,5 +21,6 @@ class WindowCutter:
             return np.array_split(audio_data, window_count)
 
         except ValueError:
-            print("audio")
-            return []
+            print("Warning: Audio data is empty.")
+
+        return []

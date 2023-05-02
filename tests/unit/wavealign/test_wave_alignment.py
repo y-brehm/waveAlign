@@ -10,10 +10,10 @@ class TestWaveAlignment(unittest.TestCase):
         self.fake_input_path = '/my/dir'
         self.fake_output_path = '/my/out'
         self.fake_target_lufs = -14
-
+        self.fake_audio_data = mock.MagicMock()
         self.fake_audio_file_spec_set = AudioFileSpecSet(
                 file_path='/my/dir/fake_file_1.wav',
-                audio_data=mock.MagicMock(),
+                audio_data=self.fake_audio_data,
                 original_audio_level=7.0,
                 metadata=mock.MagicMock()
                 )
@@ -30,7 +30,7 @@ class TestWaveAlignment(unittest.TestCase):
                 'wavealign.wave_alignment_processor.AudioFileReader.read',
                 return_value=self.fake_audio_file_spec_set).start()
         self.mock_waveform_alignment = mock.patch(
-                'wavealign.wave_alignment_processor.WaveformAligner.align_waveform_to_target').start()
+                'wavealign.wave_alignment_processor.align_waveform_to_target').start()
 
     def tearDown(self):
         mock.patch.stopall()
@@ -67,10 +67,11 @@ class TestWaveAlignment(unittest.TestCase):
         self.mock_find.assert_called_once_with(self.mock_normpath.return_value)
         self.mock_read.assert_called_once_with(*self.mock_find.return_value, 2, self.fake_gain_caluclation_strategy)
         self.mock_waveform_alignment.assert_called_once_with(
-                self.fake_audio_file_spec_set,
+                self.fake_audio_data,
+                7.0,
                 self.fake_target_lufs
                 )
-        self.mock_write.assert_called_once_with('fake_file_1.wav',
+        self.mock_write.assert_called_once_with('/my/dir/fake_file_1.wav',
                                                 self.fake_audio_file_spec_set)
 
     def test_wave_alignment_write_no_clipping_output_path(self):
@@ -91,7 +92,8 @@ class TestWaveAlignment(unittest.TestCase):
         self.mock_find.assert_called_once_with(self.mock_normpath.return_value)
         self.mock_read.assert_called_once_with(*self.mock_find.return_value, 2, self.fake_gain_caluclation_strategy)
         self.mock_waveform_alignment.assert_called_once_with(
-                self.fake_audio_file_spec_set,
+                self.fake_audio_data,
+                7.0,
                 self.fake_target_lufs
                 )
 

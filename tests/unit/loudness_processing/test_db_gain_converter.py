@@ -4,14 +4,14 @@ from parameterized import parameterized
 import math
 import numpy as np
 
-from wavealign.loudness_processing.db_gain_converter import DbGainConverter
+from wavealign.loudness_processing.db_gain_conversion import gain_to_db, db_to_gain
 
 
 class TestCalculation(unittest.TestCase):
-    @mock.patch('wavealign.loudness_processing.db_gain_converter.np.log10')
+    @mock.patch('wavealign.loudness_processing.db_gain_conversion.np.log10')
     def test_gain_to_db(self, mock_np_log):
         fake_gain = -5
-        DbGainConverter().gain_to_db(fake_gain)
+        gain_to_db(fake_gain)
         mock_np_log.assert_called_once_with(fake_gain)
 
     @parameterized.expand([
@@ -21,7 +21,7 @@ class TestCalculation(unittest.TestCase):
         ('zero case', 0, -math.inf),
     ])
     def test_gain_to_db_values(self, test_case, fake_gain, expected):
-        fake_db = DbGainConverter().gain_to_db(fake_gain)
+        fake_db = gain_to_db(fake_gain)
         np.testing.assert_almost_equal(fake_db, expected)
 
     @parameterized.expand([
@@ -31,5 +31,5 @@ class TestCalculation(unittest.TestCase):
         ('zero case', 0, 1),
     ])
     def test_db_to_gain_values(self, test_case, fake_db, expected):
-        fake_gain = DbGainConverter.db_to_gain(fake_db)
+        fake_gain = db_to_gain(fake_db)
         np.testing.assert_almost_equal(fake_gain, expected)

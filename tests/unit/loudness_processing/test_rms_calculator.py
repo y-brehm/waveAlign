@@ -8,7 +8,7 @@ from wavealign.loudness_processing.rms_calculator import RmsCalculator
 class TestRmsCalculator(unittest.TestCase):
     @mock.patch('wavealign.loudness_processing.rms_calculator.np.mean')
     @mock.patch('wavealign.loudness_processing.rms_calculator.np.sqrt')
-    @mock.patch('wavealign.loudness_processing.rms_calculator.DbGainConverter.gain_to_db')
+    @mock.patch('wavealign.loudness_processing.rms_calculator.gain_to_db')
     def test_calculate_rms(self, mock_gain_to_db, mock_np_sqrt, mock_np_mean):
         fake_input = np.asarray([[0, -1, 2], [3, 4, -5]])
 
