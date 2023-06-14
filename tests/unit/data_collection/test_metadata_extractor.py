@@ -45,15 +45,14 @@ class TestMetadataExtractor(unittest.TestCase):
 
 
 class TestMetadataExtractorAssert(unittest.TestCase):
-    @mock.patch('wavealign.data_collection.metadata_extractor.load_file').start()
+    @mock.patch('wavealign.data_collection.metadata_extractor.load_file')
     def test_write_with_faulty_metadata(self, mock_tag_load_file):
         mock_tag_load_file.return_value = None
 
         try:
             MetaDataExtractor().extract('some_path')
-        except ValueError:
-            pass
-        except Exception:
-            self.fail('unexpected exception raised')
+        except Exception as e:
+            if "Failed to read metadata for" not in str(e):
+                self.fail('unexpected exception raised')
         else:
             self.fail('ExpectedException not raised')
