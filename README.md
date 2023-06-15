@@ -1,11 +1,12 @@
 # WaveAlign: Loudness Alignment Processor to end the Loudness War between DJs
+[![Tests](https://github.com/y-brehm/waveAlign/actions/workflows/run_tests.yml/badge.svg)](https://github.com/y-brehm/waveAlign/actions/workflows/run_tests.yml)
 
 WaveAlign is a Python command-line tool designed to help put an end to the loudness war between DJs by aligning the loudness levels of songs. 
 It supports multiple gain calculation strategies, such as PEAK, RMS, and LUFS. With WaveAlign, you can process audio files in a specified input directory and optionally save the output to a different directory.
 
 # ⚡️Requirements
 * [ffmpeg >= 5.1](https://ffmpeg.org/)
-* [python >= 3.9 < 3.11](https://www.python.org/)
+* [python >= 3.9](https://www.python.org/)
 
 # 📦Installation
 ```bash
