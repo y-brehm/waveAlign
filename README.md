@@ -5,7 +5,7 @@ It supports multiple gain calculation strategies, such as PEAK, RMS, and LUFS. W
 
 # ⚡️Requirements
 * [ffmpeg >= 5.1](https://ffmpeg.org/)
-* [python >= 3.9 < 3.11](https://www.python.org/)
+* [python >= 3.9](https://www.python.org/)
 
 # 📦Installation
 ```bash
