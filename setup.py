@@ -14,8 +14,10 @@ setup(
     python_requires='>=3.9.*',
     install_requires=[
         'pyloudnorm==0.1.1',
-        'numpy==1.22.0',
+        'numpy==1.24.3',
         'librosa==0.10.0',
+        'music-tag==0.4.3',
+        'ffmpegio==0.8.3',
         'pyloudnorm==0.1.1',
         ],
 )
