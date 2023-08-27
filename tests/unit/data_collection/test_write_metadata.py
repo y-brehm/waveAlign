@@ -20,9 +20,7 @@ class TestWriteMetadata(unittest.TestCase):
 
         try:
             write_metadata(mock.MagicMock(), 'some_path')
-        except ValueError:
-            pass
         except Exception:
-            self.fail('unexpected exception raised')
+            pass
         else:
             self.fail('ExpectedException not raised')

@@ -16,4 +16,4 @@ def write_metadata(audio_file_spec_set: AudioFileSpecSet,
         metadata.save()
 
     except ValueError:
-        raise ValueError(f"Failed to read metadata for {file_path}")
+        raise Exception(f"Failed to read metadata for {file_path}")

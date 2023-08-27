@@ -103,9 +103,9 @@ class TestWaveAlignment(unittest.TestCase):
                 self.fake_audio_file_spec_set
                 )
 
-    @mock.patch('wavealign.wave_alignment_processor.PeakCalculator.calculate_level')
-    def test_wave_alignment_detect_clipping(self, mock_detect_peak):
-        mock_detect_peak.return_value = 1
+    @mock.patch('wavealign.wave_alignment_processor.ClippingProcessor.check_for_clipping')
+    def test_wave_alignment_detect_clipping(self, mock_check_for_clipping):
+        mock_check_for_clipping.return_value = 1
 
         with self.assertRaises((AssertionError, Exception)):
             WaveAlignmentProcessor().process(
@@ -125,4 +125,4 @@ class TestWaveAlignment(unittest.TestCase):
                     self.fake_audio_file_spec_set,
                     self.fake_target_lufs
                     )
-            mock_detect_peak.assert_called_once_with(self.fake_audio_file_spec_set.audio_data)
+            mock_check_for_clipping.assert_called_once_with(self.fake_audio_file_spec_set.audio_data)
