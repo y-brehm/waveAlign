@@ -9,13 +9,14 @@ from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
 class TestPcmFloatConverter(unittest.TestCase):
     def setUp(self):
         self.mock_iinfo = mock.patch(
-            'wavealign.data_collection.pcm_float_converter.iinfo').start()
+            "wavealign.data_collection.pcm_float_converter.iinfo"
+        ).start()
 
     def tearDown(self):
         mock.patch.stopall()
 
     def test_is_pcm_encoded(self):
-        self.mock_iinfo.return_value = type('MockInfo', (), {'bits': 16})
+        self.mock_iinfo.return_value = type("MockInfo", (), {"bits": 16})
 
         pcm_signal = array([0, 1, 2], dtype=int16)
         float_signal = array([0.0, 1.0, 2.0], dtype=float32)
@@ -25,7 +26,9 @@ class TestPcmFloatConverter(unittest.TestCase):
         self.assertFalse(converter.is_pcm_encoded(float_signal))
 
     def test_pcm_to_float(self):
-        self.mock_iinfo.return_value = type('MockInfo', (), {'bits': 16, 'min': -32768, 'max': 32767})
+        self.mock_iinfo.return_value = type(
+            "MockInfo", (), {"bits": 16, "min": -32768, "max": 32767}
+        )
 
         pcm_signal = array([0, 32767, -32768], dtype=int16)
         expected_float_signal = array([0.0, 1.0, -1.0], dtype=float32)
@@ -34,7 +37,9 @@ class TestPcmFloatConverter(unittest.TestCase):
         assert_almost_equal(float_signal, expected_float_signal, decimal=4)
 
     def test_float_to_pcm(self):
-        self.mock_iinfo.return_value = type('MockInfo', (), {'bits': 16, 'min': -32768, 'max': 32767})
+        self.mock_iinfo.return_value = type(
+            "MockInfo", (), {"bits": 16, "min": -32768, "max": 32767}
+        )
 
         float_signal = array([0.0, 1.0, -1.0], dtype=float32)
         expected_pcm_signal = array([0, 32767, -32768], dtype=int16)

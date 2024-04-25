@@ -2,7 +2,9 @@ import unittest
 import numpy as np
 from parameterized import parameterized
 
-from wavealign.loudness_processing.align_waveform_to_target import align_waveform_to_target
+from wavealign.loudness_processing.align_waveform_to_target import (
+    align_waveform_to_target,
+)
 
 test_cases = [
     (
@@ -28,8 +30,12 @@ test_cases = [
 
 class TestAlignWaveformToTarget(unittest.TestCase):
     @parameterized.expand(test_cases)
-    def test_align_waveform_to_target(self, audio_data, original_audio_level, target_level, expected_output):
-        aligned_waveform = align_waveform_to_target(audio_data, original_audio_level, target_level)
+    def test_align_waveform_to_target(
+        self, audio_data, original_audio_level, target_level, expected_output
+    ):
+        aligned_waveform = align_waveform_to_target(
+            audio_data, original_audio_level, target_level
+        )
 
         self.assertIsInstance(aligned_waveform, np.ndarray)
         self.assertEqual(aligned_waveform.shape, audio_data.shape)

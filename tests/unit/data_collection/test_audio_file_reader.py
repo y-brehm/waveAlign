@@ -1,58 +1,60 @@
-import mock
 import unittest
+import mock
+
+import numpy as np
 
 from wavealign.data_collection.audio_file_reader import AudioFileReader
-from wavealign.data_collection.audio_metadata import AudioMetadata
 
 
 class TestAudioFileReader(unittest.TestCase):
     def setUp(self):
-        self.mock_audio_data = mock.MagicMock()
-        self.mock_artwork = mock.MagicMock()
-        self.mock_metadata = AudioMetadata(
-            num_channels=2,
-            artwork=self.mock_artwork,
-            codec_name='eva01',
-            bit_rate='16k',
-            sample_rate=44100)
-
+        self.mock_audio_read = mock.patch(
+            "wavealign.data_collection.audio_file_reader.audio.read"
+        ).start()
         self.mock_pcm_float_converter = mock.patch(
-            'wavealign.data_collection.audio_file_reader.PcmFloatConverter').start()
-        self.mock_extract_metadata = mock.patch(
-            'wavealign.data_collection.audio_file_reader.MetaDataExtractor.extract').start()
-        self.mock_extract_audio_level = mock.patch(
-            'wavealign.data_collection.audio_file_reader.AudioLevelExtractor.extract').start()
-        self.mock_read = mock.patch(
-            'wavealign.data_collection.audio_file_reader.audio.read').start()
-
-        self.mock_extract_metadata.return_value = self.mock_metadata
-        self.mock_read.return_value = (44100, self.mock_audio_data)
-        self.mock_extract_audio_level.return_value = -15
+            "wavealign.data_collection.audio_file_reader.PcmFloatConverter"
+        ).start()
+        self.__fake_audio_read_return = (
+            48000,
+            np.array([0, 32767, -32768], dtype=np.int16),
+        )
+        self.mock_audio_read.return_value = self.__fake_audio_read_return
 
     def tearDown(self):
         mock.patch.stopall()
 
-    def test_read(self):
+    def test_read_pcm_encoded(self):
+        self.mock_pcm_float_converter.is_pcm_encoded.return_value = True
+        fake_pcm_to_float_return = np.array([0.0, 1.0, -1.0], dtype=np.float32)
+        self.mock_pcm_float_converter.return_value.pcm_to_float.return_value = (
+            fake_pcm_to_float_return
+        )
+
+        reader = AudioFileReader()
+        audio_data = reader.read("dummy_path")
+
+        self.mock_audio_read.assert_called_once_with("dummy_path")
+        self.mock_pcm_float_converter.return_value.is_pcm_encoded.assert_called_once_with(
+            self.__fake_audio_read_return[1]
+        )
+        self.mock_pcm_float_converter.return_value.pcm_to_float.assert_called_once_with(
+            self.__fake_audio_read_return[1]
+        )
+        np.testing.assert_array_almost_equal(
+            audio_data, fake_pcm_to_float_return, decimal=4
+        )
+
+    def test_read_not_pcm_encoded(self):
         self.mock_pcm_float_converter.return_value.is_pcm_encoded.return_value = False
 
-        file_spec_set = AudioFileReader().read('some_path', 2, mock.MagicMock())
+        reader = AudioFileReader()
+        audio_data = reader.read("dummy_path")
 
-        self.mock_extract_audio_level.assert_called_once_with(self.mock_audio_data)
-        self.assertEqual(file_spec_set.file_path, 'some_path')
-        self.assertEqual(file_spec_set.audio_data, self.mock_audio_data)
-        self.assertAlmostEqual(file_spec_set.original_audio_level, -15)
-        self.assertEqual(file_spec_set.metadata, self.mock_metadata)
+        self.mock_audio_read.assert_called_once_with("dummy_path")
+        self.mock_pcm_float_converter.return_value.is_pcm_encoded.assert_called_once_with(
+            self.__fake_audio_read_return[1]
+        )
         self.mock_pcm_float_converter.return_value.pcm_to_float.assert_not_called()
-
-    def test_read_with_conversion(self):
-        mock_audio_data_converted = mock.MagicMock()
-        self.mock_pcm_float_converter.return_value.pcm_to_float.return_value = mock_audio_data_converted
-        self.mock_pcm_float_converter.return_value.is_pcm_encoded.return_value = True
-
-        file_spec_set = AudioFileReader().read('some_path', 2, mock.MagicMock())
-
-        self.mock_extract_audio_level.assert_called_once_with(mock_audio_data_converted)
-        self.assertEqual(file_spec_set.file_path, 'some_path')
-        self.assertEqual(file_spec_set.audio_data, mock_audio_data_converted)
-        self.assertAlmostEqual(file_spec_set.original_audio_level, -15)
-        self.assertEqual(file_spec_set.metadata, self.mock_metadata)
+        np.testing.assert_array_almost_equal(
+            audio_data, self.__fake_audio_read_return[1], decimal=4
+        )

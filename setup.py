@@ -2,10 +2,10 @@ from glob import glob
 from os.path import splitext, basename
 from setuptools import setup, find_packages
 
-
+# TODO: switch to toml
 setup(
     name='waveAlign',
-    version=1.0,
+    version="1.0.0",
     description="A python package for loudness alignment of audio files (currently .wav only).",
     url='https://github.com/y-brehm/waveAlign',
     packages=find_packages('src'),
