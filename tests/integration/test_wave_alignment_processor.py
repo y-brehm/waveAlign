@@ -1,17 +1,21 @@
 import os
+import glob
 import shutil
+import mock
 import unittest
 
+from io import StringIO
 from scipy.io import wavfile
 from pyloudnorm import Meter
 
 from src.wavealign.wave_alignment_processor import WaveAlignmentProcessor
 from src.wavealign.loudness_processing.window_size import WindowSize
 
+# TODO: Fix scipy wav file chunk read error (remove unreadable header from test files)
+
 
 class TestWaveAlignmentProcessor(unittest.TestCase):
     def setUp(self):
-        self.__processor = WaveAlignmentProcessor()
         self.__input_path = os.path.normpath(
             os.path.join(os.path.dirname(__file__), "test_files")
         )
@@ -22,23 +26,40 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree(self.__output_path)
+        for file in glob.glob(os.path.join(self.__input_path, "*.yaml")):
+            os.remove(file)
 
     def test_processing_successful(self):
-        problem_files = self.__processor.process(
+        processor = WaveAlignmentProcessor(
             self.__input_path,
             self.__output_path,
             window_size=WindowSize.LUFS_I,
-            user_target_level=-14,
+            target_level=-14,
         )
+        processor.process()
         for audio_file in get_file_paths_with_ending(self.__output_path, ".wav"):
             sample_rate, audio_data = wavfile.read(audio_file)
             meter = Meter(sample_rate)
             loudness = meter.integrated_loudness(audio_data)
             self.assertAlmostEqual(loudness, -14, delta=0.5)
 
-        self.assertEqual(len(problem_files), 0)
+    def test_processing_successful_skip_existing_files(self):
+        processor = WaveAlignmentProcessor(
+            self.__input_path,
+            self.__output_path,
+            window_size=WindowSize.LUFS_I,
+            target_level=-14,
+        )
+        processor.process()
+        with mock.patch("sys.stdout", new_callable=StringIO) as mock_stdout:
+            processor.process()
+            self.assertIn("Skipping already processed file", mock_stdout.getvalue())
 
-    # TODO: Add more tests
+        for audio_file in get_file_paths_with_ending(self.__output_path, ".wav"):
+            sample_rate, audio_data = wavfile.read(audio_file)
+            meter = Meter(sample_rate)
+            loudness = meter.integrated_loudness(audio_data)
+            self.assertAlmostEqual(loudness, -14, delta=0.5)
 
 
 def get_file_paths_with_ending(directory: str, ending: str):

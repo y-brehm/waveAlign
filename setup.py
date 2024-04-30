@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 setup(
     name='waveAlign',
     version="1.0.0",
-    description="A python package for loudness alignment of audio files (currently .wav only).",
+    description="A python package for loudness alignment of audio files.",
     url='https://github.com/y-brehm/waveAlign',
     packages=find_packages('src'),
     package_dir={'': 'src'},
@@ -15,6 +15,7 @@ setup(
     install_requires=[
         'pyloudnorm==0.1.1',
         'numpy==1.24.3',
+        'pyyaml==6.0.1',
         'librosa==0.10.0',
         'music-tag==0.4.3',
         'ffmpegio==0.8.3',

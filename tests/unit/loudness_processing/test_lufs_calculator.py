@@ -6,7 +6,7 @@ from wavealign.loudness_processing.lufs_calculator import LUFSCalculator
 
 
 class TestLUFSCalculator(unittest.TestCase):
-    @mock.patch('wavealign.loudness_processing.lufs_calculator.Meter')
+    @mock.patch("wavealign.loudness_processing.lufs_calculator.Meter")
     def test_calculate_lufs(self, mock_meter):
         mock_pyln_meter = mock.MagicMock()
         fake_input = np.asarray([0, 1, 2])

@@ -10,19 +10,15 @@ class AudioFileWriter:
     def __init__(self) -> None:
         self.__pcm_float_converter = PcmFloatConverter()
 
-    def write(self,
-              file_path: str,
-              audio_data: np.ndarray,
-              audio_metadata: AudioMetadata
-              ) -> None:
+    def write(
+        self, file_path: str, audio_data: np.ndarray, audio_metadata: AudioMetadata
+    ) -> None:
         self.__write_audio(file_path, audio_data, audio_metadata)
         write_metadata(file_path, audio_metadata)
 
-    def __write_audio(self,
-                      file_path: str,
-                      audio_data: np.ndarray,
-                      metadata: AudioMetadata
-                      ) -> None:
+    def __write_audio(
+        self, file_path: str, audio_data: np.ndarray, metadata: AudioMetadata
+    ) -> None:
         if self.__pcm_float_converter.is_pcm_encoded(audio_data):
             audio_data = self.__pcm_float_converter.float_to_pcm(audio_data)
 
@@ -35,4 +31,4 @@ class AudioFileWriter:
             ac=metadata.num_channels,
             ab=metadata.bit_rate,
             write_id3v2=True,
-            )
+        )

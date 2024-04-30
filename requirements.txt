@@ -1,4 +1,5 @@
 numpy==1.24.3
+PyYAML==6.0.1
 pyloudnorm==0.1.1
 music-tag==0.4.3
 ffmpegio==0.8.3

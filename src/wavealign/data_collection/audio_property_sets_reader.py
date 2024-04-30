@@ -1,28 +1,40 @@
 import os
+import traceback
+
 from wavealign.data_collection.audio_property_set_generator import (
     AudioPropertySetGenerator,
 )
-import traceback
-
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_finder import AudioFileFinder
 from wavealign.loudness_processing.window_size import WindowSize
 
+# TODO: Add progress bar
+
 
 class AudioPropertySetsReader:
-    def __init__(self):
-        self.__audio_property_set_generator = AudioPropertySetGenerator()
+    def __init__(
+        self,
+        input_path: str,
+        window_size: WindowSize,
+        cache_manager=None,
+    ):
+        self.__input_path = input_path
+        self.__audio_property_set_generator = AudioPropertySetGenerator(window_size)
         self.__audio_file_finder = AudioFileFinder()
+        self.__cache_manager = cache_manager
 
-    def read(
-        self, input_path: str, window_size: WindowSize
-    ) -> tuple[list[AudioPropertySet], list[str]]:
+    def read(self) -> tuple[list[AudioPropertySet], list[str]]:
         unprocessed_files = []
         audio_property_sets = []
-        for file_path in self.__audio_file_finder.find(os.path.normpath(input_path)):
+        for file_path in self.__audio_file_finder.find(
+            os.path.normpath(self.__input_path)
+        ):
             try:
-                audio_property_set = self.__audio_property_set_generator.read(
-                    file_path, window_size
+                if self.__cache_manager and self.__cache_manager.is_cached(file_path):
+                    continue
+
+                audio_property_set = self.__audio_property_set_generator.generate(
+                    file_path
                 )
                 audio_property_sets.append(audio_property_set)
 

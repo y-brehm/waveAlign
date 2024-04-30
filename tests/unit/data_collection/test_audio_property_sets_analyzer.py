@@ -15,18 +15,21 @@ class TestAudioPropertySetsAnalyzer(unittest.TestCase):
         audio_property_sets = [
             AudioPropertySet(
                 "dummy_path",
+                last_modified=1234567890,
                 original_peak_level=-0.5,
                 original_lufs_level=-14.0,
                 metadata=mock.MagicMock(),
             ),
             AudioPropertySet(
                 "dummy_path",
+                last_modified=1234567890,
                 original_peak_level=-2.0,
                 original_lufs_level=-15.0,
                 metadata=mock.MagicMock(),
             ),
             AudioPropertySet(
                 "dummy_path",
+                last_modified=1234567890,
                 original_peak_level=-6.0,
                 original_lufs_level=-18.0,
                 metadata=mock.MagicMock(),
@@ -42,6 +45,7 @@ class TestAudioPropertySetsAnalyzer(unittest.TestCase):
         audio_property_sets = [
             AudioPropertySet(
                 "dummy_path",
+                last_modified=1234567890,
                 original_peak_level=-1.0,
                 original_lufs_level=-14.0,
                 metadata=mock.MagicMock(),

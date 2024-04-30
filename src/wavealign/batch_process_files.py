@@ -1,6 +1,7 @@
 import argparse
 
 from wavealign.loudness_processing.window_size import WindowSize
+from wavealign.data_collection.wave_alignment_reader import WaveAlignmentReader
 from wavealign.wave_alignment_processor import WaveAlignmentProcessor
 
 
@@ -35,16 +36,18 @@ def main():
     parser.add_argument(
         "-t",
         "--target",
-        help="Specify the target loudness level in dB. Has to be between -30 and -9.",
+        help="Specify the target loudness level in dB. Has to be between -30 and -8.",
         metavar="-30 <= target <= -10",
-        choices=range(-30, -5),
+        choices=range(-30, -7),
         type=int,
         default=-12,
     )
     parser.add_argument(
         "-r",
         "--read_only",
-        help="Run in read only mode. Only outputs LUFS of input files without processing them.",
+        help="Run in read only mode. "
+        " Only outputs LUFS of input files without processing them."
+        " Also outputs library dependent max LUFS.",
         default=False,
         action=argparse.BooleanOptionalAction,
     )
@@ -52,20 +55,25 @@ def main():
 
     if args.read_only:
         print("### PROCESSING STARTED! READ-ONLY MODE ACTIVE!")
+        wave_alignment_reader = WaveAlignmentReader(
+            input_path=args.input,
+            window_size=args.window_size,
+        )
+        # TODO: make this output usable for further processing
+        _, _ = wave_alignment_reader.read()
     else:
         print(
             f"### PROCESSING STARTED! AIMING FOR NEW TARGET:\
             {args.target} dB {args.window_size.name}\n"
         )
 
-    wave_alignment_processor = WaveAlignmentProcessor()
-    wave_alignment_processor.process(
-        input_path=args.input,
-        output_path=args.output,
-        window_size=args.window_size,
-        user_target_level=args.target,
-        read_only=args.read_only,
-    )
+        wave_alignment_processor = WaveAlignmentProcessor(
+            input_path=args.input,
+            output_path=args.output,
+            window_size=args.window_size,
+            target_level=args.target,
+        )
+        wave_alignment_processor.process()
 
     print("\n### PROCESSING FINISHED! ###")
 

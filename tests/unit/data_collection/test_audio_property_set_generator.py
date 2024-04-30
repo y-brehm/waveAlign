@@ -14,6 +14,9 @@ class TestAudioPropertySetGenerator(unittest.TestCase):
         self.mock_audio_file_reader = mock.patch(
             "wavealign.data_collection.audio_property_set_generator.AudioFileReader"
         ).start()
+        self.mock_os_path_getmtime = mock.patch(
+            "wavealign.data_collection.audio_property_set_generator.os.path.getmtime"
+        ).start()
         self.mock_metadata_extractor = mock.patch(
             "wavealign.data_collection.audio_property_set_generator.MetaDataExtractor"
         ).start()
@@ -33,8 +36,10 @@ class TestAudioPropertySetGenerator(unittest.TestCase):
         )
         self.mock_audio_level_extractor.return_value.extract.side_effect = [-14, -1]
 
-        generator = AudioPropertySetGenerator()
-        audio_property_set = generator.read("dummy_path", WindowSize.LUFS_S)
+        self.mock_os_path_getmtime.return_value = 1234567890
+
+        generator = AudioPropertySetGenerator(WindowSize.LUFS_S)
+        audio_property_set = generator.generate("dummy_path")
 
         self.mock_audio_file_reader.return_value.read.assert_called_once_with(
             "dummy_path"
@@ -53,3 +58,4 @@ class TestAudioPropertySetGenerator(unittest.TestCase):
             audio_property_set.metadata,
             self.mock_metadata_extractor.return_value.extract.return_value,
         )
+        self.assertEqual(audio_property_set.last_modified, 1234567890)

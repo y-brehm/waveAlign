@@ -12,7 +12,9 @@ class WindowedLevelCalculator:
         sample_rate: int,
         audio_level_calculator: IAudioLevelCalculator,
     ) -> None:
-        self.__window_size_in_s = 0 if window_size == WindowSize.LUFS_I else window_size.value
+        self.__window_size_in_s = (
+            0 if window_size == WindowSize.LUFS_I else window_size.value
+        )
         self.__window_cutter = WindowCutter(self.__window_size_in_s, sample_rate)
         self.__audio_level_calculator = audio_level_calculator
 

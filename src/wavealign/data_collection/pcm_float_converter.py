@@ -6,25 +6,22 @@ from wavealign.data_collection.array_type_info import ArrayTypeInfo
 class PcmFloatConverter:
     @staticmethod
     def is_pcm_encoded(signal: ndarray) -> bool:
-        return signal.dtype.kind == 'i'
+        return signal.dtype.kind == "i"
 
     def pcm_to_float(self, pcm_signal: ndarray) -> ndarray:
         array_type_info = self.__get_array_type_info(pcm_signal.dtype)
-        output_dtype = 'float32'
+        output_dtype = "float32"
 
-        return (pcm_signal.astype(output_dtype)
-                - array_type_info.offset) / array_type_info.abs_max
+        return (
+            pcm_signal.astype(output_dtype) - array_type_info.offset
+        ) / array_type_info.abs_max
 
     def float_to_pcm(self, float_array: ndarray) -> ndarray:
-        output_dtype = 'int32'
-        array_type_info = self.__get_array_type_info(
-            output_dtype
-            )
+        output_dtype = "int32"
+        array_type_info = self.__get_array_type_info(output_dtype)
 
-        int_array = float_array * array_type_info.abs_max \
-            + array_type_info.offset
-        normalized_array = int_array.clip(array_type_info.min,
-                                          array_type_info.max)
+        int_array = float_array * array_type_info.abs_max + array_type_info.offset
+        normalized_array = int_array.clip(array_type_info.min, array_type_info.max)
 
         return normalized_array.astype(output_dtype)
 
@@ -36,7 +33,4 @@ class PcmFloatConverter:
         array_type_min = array_info.min
         array_type_max = array_info.max
 
-        return ArrayTypeInfo(array_type_abs_max,
-                             offset,
-                             array_type_min,
-                             array_type_max)
+        return ArrayTypeInfo(array_type_abs_max, offset, array_type_min, array_type_max)

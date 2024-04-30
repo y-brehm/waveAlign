@@ -14,7 +14,7 @@ class TestWindowCutter(unittest.TestCase):
     def test_cut_no_remaining_samples(self):
         window_size_in_samples = int(self.window_size * self.sample_rate)
 
-        windows = self.window_cutter.cut(self.audio_data[:window_size_in_samples * 4])
+        windows = self.window_cutter.cut(self.audio_data[: window_size_in_samples * 4])
 
         self.assertEqual(len(windows), 4)
         self.assertEqual(windows[0].shape[0], window_size_in_samples)
