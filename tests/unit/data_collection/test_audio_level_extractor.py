@@ -27,7 +27,7 @@ class TestAudioLevelExtractor(unittest.TestCase):
 
         audio_level_calculator = LUFSCalculator(self.sample_rate)
         windowed_level_calculator = WindowedLevelCalculator(
-            self.window_size, self.sample_rate, audio_level_calculator
+            3, self.sample_rate, audio_level_calculator
         )
         loudest_window = windowed_level_calculator.get_loudest_window(
             self.fake_audio_data
@@ -48,7 +48,7 @@ class TestAudioLevelExtractor(unittest.TestCase):
 
         audio_level_calculator = PeakCalculator()
         windowed_level_calculator = WindowedLevelCalculator(
-            self.window_size, self.sample_rate, audio_level_calculator
+            3, self.sample_rate, audio_level_calculator
         )
         loudest_window = windowed_level_calculator.get_loudest_window(
             self.fake_audio_data

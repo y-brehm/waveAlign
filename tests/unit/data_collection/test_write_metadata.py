@@ -21,9 +21,5 @@ class TestWriteMetadata(unittest.TestCase):
     def test_write_faulty_metadata(self, mock_tag_load_file):
         mock_tag_load_file.return_value = None
 
-        try:
+        with self.assertRaises(Exception):
             write_metadata("some_path", self.mock_audio_metadata)
-        except Exception:
-            pass
-        else:
-            self.fail("ExpectedException not raised")

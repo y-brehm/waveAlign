@@ -1,6 +1,5 @@
 import numpy as np
 
-from wavealign.loudness_processing.window_size import WindowSize
 from wavealign.loudness_processing.i_audio_level_calculator import IAudioLevelCalculator
 from wavealign.loudness_processing.window_cutter import WindowCutter
 
@@ -8,13 +7,11 @@ from wavealign.loudness_processing.window_cutter import WindowCutter
 class WindowedLevelCalculator:
     def __init__(
         self,
-        window_size: WindowSize,
+        window_size: int,
         sample_rate: int,
         audio_level_calculator: IAudioLevelCalculator,
     ) -> None:
-        self.__window_size_in_s = (
-            0 if window_size == WindowSize.LUFS_I else window_size.value
-        )
+        self.__window_size_in_s = window_size
         self.__window_cutter = WindowCutter(self.__window_size_in_s, sample_rate)
         self.__audio_level_calculator = audio_level_calculator
 

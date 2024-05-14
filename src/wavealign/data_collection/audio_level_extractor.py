@@ -23,12 +23,13 @@ class AudioLevelExtractor:
         )
 
     def extract(self, audio_data: np.ndarray) -> float:
-        # TODO: find out with this has to be .value
-        if self.__window_size.value == WindowSize.LUFS_I.value:
+        if self.__window_size is WindowSize.LUFS_I:
             return self.__audio_level_calculator.calculate_level(audio_data)
 
         windowed_level_calculator = WindowedLevelCalculator(
-            self.__window_size, self.__sample_rate, self.__audio_level_calculator
+            self.__map_window_size_to_value(self.__window_size),
+            self.__sample_rate,
+            self.__audio_level_calculator,
         )
         loudest_window = windowed_level_calculator.get_loudest_window(audio_data)
 
@@ -41,3 +42,7 @@ class AudioLevelExtractor:
             return LUFSCalculator(self.__sample_rate)
         else:
             return PeakCalculator()
+
+    @staticmethod
+    def __map_window_size_to_value(window_size: WindowSize) -> int:
+        return 3 if window_size is WindowSize.LUFS_S else 4

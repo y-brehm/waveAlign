@@ -9,6 +9,7 @@ from wavealign.data_collection.audio_file_finder import AudioFileFinder
 from wavealign.loudness_processing.window_size import WindowSize
 
 # TODO: Add progress bar
+# TODO: Move to python 3.11 to enable optional type-hints
 
 
 class AudioPropertySetsReader:

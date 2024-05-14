@@ -72,5 +72,5 @@ class AudioPropertySetsProcessor:
     def __generate_output_path(self, input_path: str, output_path: str) -> str:
         if not output_path:
             return input_path
-        else:
-            return os.path.join(output_path, os.path.split(input_path)[1])
+
+        return os.path.join(output_path, os.path.split(input_path)[1])
