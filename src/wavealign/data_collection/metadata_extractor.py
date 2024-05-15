@@ -3,6 +3,8 @@ from music_tag import load_file
 
 from wavealign.data_collection.audio_metadata import AudioMetadata
 
+# TODO: Add missing shit ZIMMERMANN
+
 
 class MetaDataExtractor:
     def extract(
@@ -15,6 +17,7 @@ class MetaDataExtractor:
                 raise ValueError
 
             full_details = probe.full_details(file_path)
+            print(full_details)
             audio_stream_metadata = full_details["streams"][0]
             bit_rate = self.__get_bitrate_specifier(audio_stream_metadata["bit_rate"])
 

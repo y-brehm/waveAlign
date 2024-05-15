@@ -5,6 +5,8 @@ from numpy.testing import assert_almost_equal
 
 from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
 
+# TODO: integration test for encode/decode
+
 
 class TestPcmFloatConverter(unittest.TestCase):
     def setUp(self):

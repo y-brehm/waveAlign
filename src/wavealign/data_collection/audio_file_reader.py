@@ -3,6 +3,8 @@ from ffmpegio import audio
 
 from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
 
+# TODO: Include full metadata read and write
+
 
 class AudioFileReader:
     def __init__(self) -> None:

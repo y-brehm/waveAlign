@@ -2,6 +2,8 @@ import os
 import time
 import logging
 
+# TODO: check logging framework for better implementation than this
+
 
 def write_log_file(output_path: str, problem_files: list[str]) -> None:
     timestamp = time.strftime("%Y%m%d-%H%M%S")

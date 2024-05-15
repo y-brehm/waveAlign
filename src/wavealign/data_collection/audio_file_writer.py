@@ -5,6 +5,8 @@ from wavealign.data_collection.pcm_float_converter import PcmFloatConverter
 from wavealign.data_collection.audio_metadata import AudioMetadata
 from wavealign.data_collection.write_metadata import write_metadata
 
+# TODO: Include full metadata read and write
+
 
 class AudioFileWriter:
     def __init__(self) -> None:
