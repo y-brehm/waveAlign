@@ -1,8 +1,8 @@
 import os
 import glob
-import shutil
 import mock
 import unittest
+import tempfile
 
 from io import StringIO
 from scipy.io import wavfile
@@ -20,10 +20,8 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
         self.__input_path = os.path.normpath(
             os.path.join(os.path.dirname(__file__), "test_files")
         )
-        self.__output_path = os.path.normpath(
-            os.path.join(os.path.dirname(__file__), "temp_files")
-        )
-        os.makedirs(self.__output_path, exist_ok=True)
+        self.__temp_dir = tempfile.TemporaryDirectory()
+        self.__output_path = self.__temp_dir.name
         self.__processor = WaveAlignmentProcessor(
             self.__input_path,
             self.__output_path,
@@ -32,7 +30,7 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
         )
 
     def tearDown(self):
-        shutil.rmtree(self.__output_path)
+        self.__temp_dir.cleanup()
         for file in glob.glob(os.path.join(self.__input_path, "*.yaml")):
             os.remove(file)
 
