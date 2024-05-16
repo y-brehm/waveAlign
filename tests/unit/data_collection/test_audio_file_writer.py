@@ -8,10 +8,10 @@ from wavealign.data_collection.audio_metadata import AudioMetadata
 class TestAudioFileWriter(unittest.TestCase):
     def setUp(self):
         self.mock_audio_data = mock.MagicMock()
-        self.mock_artwork = mock.MagicMock()
+        self.mock_music_tag_metadata = mock.MagicMock()
         self.mock_metadata = AudioMetadata(
             num_channels=2,
-            artwork=self.mock_artwork,
+            music_tag_metadata=self.mock_music_tag_metadata,
             codec_name="eva01",
             bit_rate="int16",
             sample_rate=44100,

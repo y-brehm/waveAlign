@@ -21,7 +21,7 @@ class MetaDataExtractor:
 
             return AudioMetadata(
                 num_channels=audio_stream_metadata["channels"],
-                artwork=tag_metadata["artwork"],
+                music_tag_metadata=tag_metadata,
                 codec_name=audio_stream_metadata["codec_name"],
                 bit_rate=bit_rate,
                 sample_rate=audio_stream_metadata["sample_rate"],
