@@ -10,9 +10,9 @@ from wavealign.loudness_processing.align_waveform_to_target import (
     align_waveform_to_target,
 )
 
-# TODO: add progress bar
-# TODO: switch from dict to dataclass for cache_data
-# TODO: write more data to cache_data (e.g. original peak level, original lufs level)
+# TODO: add progress bar #29
+# TODO: switch from dict to dataclass for cache_data #30
+# TODO: write more data to cache_data (e.g. original peak level, original lufs level) #30
 
 
 class AudioPropertySetsProcessor:
@@ -41,7 +41,7 @@ class AudioPropertySetsProcessor:
                 clipped_files.append(audio_property_set.file_path)
                 continue
 
-            # TODO: add limiter here
+            # TODO: add limiter here #20
 
             audio_data = self.__audio_file_reader.read(audio_property_set.file_path)
             aligned_audio_data = align_waveform_to_target(

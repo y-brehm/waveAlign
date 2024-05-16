@@ -3,8 +3,6 @@ from music_tag import load_file
 
 from wavealign.data_collection.audio_metadata import AudioMetadata
 
-# TODO: Add missing shit ZIMMERMANN
-
 
 class MetaDataExtractor:
     def extract(

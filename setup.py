@@ -2,8 +2,10 @@ from glob import glob
 from os.path import splitext, basename
 from setuptools import setup, find_packages
 
-# TODO: switch to toml
-# TODO: move to python 3.11 (optional type hints)
+# TODO: switch to toml #25
+# TODO: move to python 3.11 (optional type hints) #26
+# TODO: add dev requirements here and check if there is a way to get rid of dev/requirements.txt #27
+
 setup(
     name="waveAlign",
     version="1.0.0",
@@ -22,10 +24,4 @@ setup(
         "ffmpegio==0.8.3",
         "pyloudnorm==0.1.1",
     ],
-    # TODO: check if extras required works
-    extras_require={"dev": [
-        "mock == 4.0.3",
-        "parameterized == 0.8.1",
-        "pytest == 7.4.0"
-    ]},
 )
