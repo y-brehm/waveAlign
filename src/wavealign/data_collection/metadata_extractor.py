@@ -10,18 +10,17 @@ class MetaDataExtractor:
         file_path: str,
     ) -> AudioMetadata:
         try:
-            tag_metadata = load_file(file_path)
-            if tag_metadata is None:
+            metadata = load_file(file_path)
+            if metadata is None:
                 raise ValueError
 
             full_details = probe.full_details(file_path)
-            print(full_details)
             audio_stream_metadata = full_details["streams"][0]
             bit_rate = self.__get_bitrate_specifier(audio_stream_metadata["bit_rate"])
 
             return AudioMetadata(
                 num_channels=audio_stream_metadata["channels"],
-                artwork=tag_metadata["artwork"],
+                metadata=metadata,
                 codec_name=audio_stream_metadata["codec_name"],
                 bit_rate=bit_rate,
                 sample_rate=audio_stream_metadata["sample_rate"],
