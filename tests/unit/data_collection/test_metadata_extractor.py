@@ -7,7 +7,7 @@ from wavealign.data_collection.audio_metadata import AudioMetadata
 
 class TestMetadataExtractor(unittest.TestCase):
     def setUp(self):
-        self.mock_music_tag_metadata = mock.MagicMock()
+        self.mock_metadata = mock.MagicMock()
         self.mock_details = {
             "streams": [
                 {
@@ -26,7 +26,7 @@ class TestMetadataExtractor(unittest.TestCase):
             "wavealign.data_collection.metadata_extractor.load_file"
         ).start()
 
-        self.mock_tag_load_file.return_value = self.mock_music_tag_metadata
+        self.mock_tag_load_file.return_value = self.mock_metadata
         self.mock_probe_details.return_value = self.mock_details
 
     def tearDown(self):
@@ -37,7 +37,7 @@ class TestMetadataExtractor(unittest.TestCase):
 
         expect = AudioMetadata(
             num_channels=2,
-            music_tag_metadata=self.mock_music_tag_metadata,
+            metadata=self.mock_metadata,
             codec_name="eva02",
             bit_rate="16k",
             sample_rate=44100,
