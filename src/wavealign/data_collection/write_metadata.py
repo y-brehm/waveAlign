@@ -12,7 +12,8 @@ def write_metadata(file_path: str, audio_metadata: AudioMetadata) -> None:
             raise ValueError
          
         for tag_name in audio_metadata.metadata._TAG_MAP.keys():
-            metadata[tag_name] = audio_metadata.metadata[tag_name]
+            if audio_metadata.metadata[tag_name]:
+                metadata[tag_name] = audio_metadata.metadata[tag_name]
 
         metadata.save()
 
