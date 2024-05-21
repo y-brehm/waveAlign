@@ -1,5 +1,6 @@
 import os
 import logging
+from tqdm import tqdm
 
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_reader import AudioFileReader
@@ -30,6 +31,7 @@ class AudioPropertySetsProcessor:
         target_level: int,
         output_path: str,
     ) -> dict:
+        progress_bar = tqdm(total=len(audio_property_sets), desc="PROCESSING")
         for audio_property_set in audio_property_sets:
             if (
                 clipping_detected(
@@ -44,7 +46,6 @@ class AudioPropertySetsProcessor:
                     f"clipping strategy: {str(self.__clipping_strategy)}"
                 )
                 continue
-
             # TODO: add limiter here #20
 
             audio_data = self.__audio_file_reader.read(audio_property_set.file_path)
@@ -63,8 +64,13 @@ class AudioPropertySetsProcessor:
             self.__cache_data[audio_property_set.file_path] = (
                 audio_property_set.last_modified
             )
+            self.__cache_data[audio_property_set.file_path] = (
+                audio_property_set.last_modified
+            )
+            progress_bar.update(1)
 
         self.__cache_data["target_level"] = target_level
+        progress_bar.close()
 
         return self.__cache_data
 

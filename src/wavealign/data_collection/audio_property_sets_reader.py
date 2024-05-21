@@ -1,5 +1,6 @@
 import os
 import logging
+from tqdm import tqdm
 
 from wavealign.data_collection.audio_property_set_generator import (
     AudioPropertySetGenerator,
@@ -22,15 +23,18 @@ class AudioPropertySetsReader:
     ):
         self.__input_path = input_path
         self.__audio_property_set_generator = AudioPropertySetGenerator(window_size)
-        self.__audio_file_finder = AudioFileFinder()
         self.__cache_manager = cache_manager
         self.__logger = logging.getLogger("AUDIO READER")
+        self.files_to_process = AudioFileFinder().find(
+            os.path.normpath(self.__input_path)
+        )
+        self.__print_files_to_process(self.files_to_process)
+        self.progress_bar = tqdm(total=len(self.files_to_process), desc="READING")
 
     def read(self) -> list[AudioPropertySet]:
         audio_property_sets = []
-        for file_path in self.__audio_file_finder.find(
-            os.path.normpath(self.__input_path)
-        ):
+
+        for file_path in self.files_to_process:
             try:
                 if self.__cache_manager and self.__cache_manager.is_cached(file_path):
                     self.__logger.info(
@@ -51,4 +55,11 @@ class AudioPropertySetsReader:
                 self.__logger.debug("", exc_info=True)
                 continue
 
+            self.progress_bar.update(1)
+
+        self.progress_bar.close()
+
         return audio_property_sets
+
+    def __print_files_to_process(self, files_to_process: list[str]) -> None:
+        print(f"### OVERALL FILES TO PROCESS: {len(files_to_process)} ###\n")
