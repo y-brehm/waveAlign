@@ -9,7 +9,6 @@ from scipy.io import wavfile
 from pyloudnorm import Meter
 
 from src.wavealign.wave_alignment_processor import WaveAlignmentProcessor
-from src.wavealign.data_collection.audio_file_reader import AudioFileReader
 from src.wavealign.loudness_processing.window_size import WindowSize
 
 # TODO: Fix scipy wav file chunk read error (remove unreadable header from test files)
@@ -64,14 +63,16 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
             self.assertEqual(len(audio_data), len(original_audio_data))
 
     def test_length_of_mp3_audio_file_stays_the_same(self):
-        audio_file_reader = AudioFileReader()
         self.__processor.process()
         for audio_file in get_file_paths_with_ending(self.__output_path, ".mp3"):
-            audio_data = audio_file_reader.read(audio_file)
-            original_audio_data = audio_file_reader.read(
-                os.path.join(self.__input_path, os.path.basename(audio_file))
-            )
-            self.assertEqual(len(audio_data), len(original_audio_data))
+            input_path = os.path.join(self.__input_path, os.path.basename(audio_file))
+
+            with open(input_path, 'rb') as input_file:
+                input_size = len(input_file.read())
+            with open(audio_file, 'rb') as output_file:
+                output_size = len(output_file.read())
+
+            self.assertEqual(input_size, output_size)
 
 
 def get_file_paths_with_ending(directory: str, ending: str):
