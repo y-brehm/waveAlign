@@ -35,7 +35,9 @@ class WaveAlignmentReader:
     ) -> None:
         for audio_property_set in audio_property_sets:
             print(
-                f"{os.path.basename(audio_property_set.file_path)} : {audio_property_set.original_lufs_level} : {audio_property_set.original_peak_level}"
+                f"FILE: {os.path.basename(audio_property_set.file_path)} "\
+                f"ORIGINAL LUFS: {audio_property_set.original_lufs_level:.2f} "\
+                f"ORIGINAL PEAK: {audio_property_set.original_peak_level:.2f} "
                 f"dB {self.__window_size.name}"
             )
         print(
