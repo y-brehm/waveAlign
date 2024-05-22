@@ -28,11 +28,11 @@ class AudioPropertySetsReader:
         self.files_to_process = AudioFileFinder().find(
             os.path.normpath(self.__input_path)
         )
-        self.__print_files_to_process(self.files_to_process)
-        self.progress_bar = tqdm(total=len(self.files_to_process), desc="READING")
 
     def read(self) -> list[AudioPropertySet]:
         audio_property_sets = []
+        self.__print_files_to_process(self.files_to_process)
+        progress_bar = tqdm(total=len(self.files_to_process), desc="READING")
 
         for file_path in self.files_to_process:
             try:
@@ -55,9 +55,9 @@ class AudioPropertySetsReader:
                 self.__logger.debug("", exc_info=True)
                 continue
 
-            self.progress_bar.update(1)
+            progress_bar.update(1)
 
-        self.progress_bar.close()
+        progress_bar.close()
 
         return audio_property_sets
 
