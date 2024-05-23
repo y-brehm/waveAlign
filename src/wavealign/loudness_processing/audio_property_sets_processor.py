@@ -12,7 +12,6 @@ from wavealign.loudness_processing.align_waveform_to_target import (
     align_waveform_to_target,
 )
 
-# TODO: add progress bar #29
 # TODO: switch from dict to dataclass for cache_data #30
 # TODO: write more data to cache_data (e.g. original peak level, original lufs level) #30
 

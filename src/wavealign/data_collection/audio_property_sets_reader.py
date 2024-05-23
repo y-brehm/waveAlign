@@ -10,7 +10,6 @@ from wavealign.data_collection.audio_file_finder import AudioFileFinder
 from wavealign.data_collection.cache_manager import CacheManager
 from wavealign.loudness_processing.window_size import WindowSize
 
-# TODO: Add progress bar #29
 # TODO: Move to python 3.11 to enable optional type-hints #26
 
 
