@@ -38,7 +38,7 @@ class WaveAlignmentReader:
                 f"FILE: {os.path.basename(audio_property_set.file_path)} "
                 f"ORIGINAL LUFS: {audio_property_set.original_lufs_level:.2f} "
                 f"dB {self.__window_size.name} "
-                f"ORIGINAL PEAK: {audio_property_set.original_peak_level:.2f} "
+                f"ORIGINAL PEAK: {audio_property_set.original_peak_level:.2f}"
             )
         print(
             f"Library dependent target level: "

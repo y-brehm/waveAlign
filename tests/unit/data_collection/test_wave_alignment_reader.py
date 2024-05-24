@@ -53,5 +53,5 @@ class TestWaveAlignmentReader(unittest.TestCase):
 
         self.mock_audio_read.assert_called_once()
         self.mock_audio_analyze.assert_called_once_with([audio_property_set])
-        self.mock_print.assert_any_call("file_path : -10 dB LUFS_S")
+        self.mock_print.assert_any_call("FILE: file_path ORIGINAL LUFS: -10.00 dB LUFS_S ORIGINAL PEAK: -1.00")
         self.mock_print.assert_any_call("Library dependent target level: -10 dB LUFS_S")
