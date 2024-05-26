@@ -1,5 +1,5 @@
 from ffmpegio import probe
-from music_tag import load_file
+from mutagen import File, FileType
 
 from wavealign.data_collection.audio_metadata import AudioMetadata
 
@@ -10,8 +10,8 @@ class MetaDataExtractor:
         file_path: str,
     ) -> AudioMetadata:
         try:
-            metadata = load_file(file_path)
-            if metadata is None:
+            metadata = File(file_path)
+            if not isinstance(metadata, FileType):
                 raise ValueError
 
             full_details = probe.full_details(file_path)

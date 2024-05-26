@@ -1,5 +1,6 @@
 import os
 import glob
+from re import A
 import mock
 import unittest
 import tempfile
@@ -7,6 +8,7 @@ import tempfile
 from io import StringIO
 from scipy.io import wavfile
 from pyloudnorm import Meter
+from mutagen import aiff
 
 from src.wavealign.wave_alignment_processor import WaveAlignmentProcessor
 from src.wavealign.loudness_processing.window_size import WindowSize
@@ -74,6 +76,15 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
 
             self.assertEqual(input_size, output_size)
 
+    def test_full_transfer_of_metadata(self):
+        self.__processor.process()
+        for audio_file in get_file_paths_with_ending(self.__output_path, ".aiff"):
+            input_file = os.path.join(self.__input_path, os.path.basename(audio_file))
+            output_metadata = aiff.AIFF(audio_file)
+            input_metadata = aiff.AIFF(input_file)
+
+            for tag in input_metadata.keys():
+                self.assertEqual(input_metadata[tag], output_metadata[tag])
 
 def get_file_paths_with_ending(directory: str, ending: str):
     file_paths = []
