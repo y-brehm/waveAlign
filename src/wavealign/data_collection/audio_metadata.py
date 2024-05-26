@@ -9,3 +9,4 @@ class AudioMetadata:
     codec_name: str
     bit_rate: str
     sample_rate: int
+    start_time: float
