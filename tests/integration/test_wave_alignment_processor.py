@@ -1,6 +1,5 @@
 import os
 import glob
-from re import A
 import mock
 import unittest
 import tempfile
