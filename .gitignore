@@ -140,3 +140,18 @@ output/*.wav
 
 # generated files
 .wavealign_cache.yaml
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+CTestTestfile.cmake
+DartConfiguration.tcl
+cmake_install.cmake
+install_manifest.txt
+cmake-build-debug/
+cmake-build-release/
+Makefile
+bin/*
+.ninja_deps
+.ninja_log
+build.ninja

@@ -15,6 +15,12 @@ from wavealign.loudness_processing.align_waveform_to_target import (
     align_waveform_to_target,
 )
 from wavealign.loudness_processing.get_new_peak_level import get_new_peak_level
+from wavealign.loudness_processing.clipping_detected import clipping_detected
+from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
+from wavealign.loudness_processing.audio_file_processor import AudioFileProcessor
+
+# TODO: switch from dict to dataclass for cache_data #30
+# TODO: write more data to cache_data (e.g. original peak level, original lufs level) #30
 
 
 class AudioPropertySetsProcessor:
@@ -31,6 +37,9 @@ class AudioPropertySetsProcessor:
         self.__cache_data = (
             cache_data if cache_data is not None else YamlCache([], self.__target_level)
         )
+        self.__cache_data = cache_data
+        self.__logger = logging.getLogger("AUDIO PROCESSOR")
+        self.__audio_file_processor = AudioFileProcessor()
 
     def process(
         self,
@@ -56,10 +65,6 @@ class AudioPropertySetsProcessor:
                 audio_property_set.file_path, output_path
             )
 
-            self.__audio_file_writer.write(
-                concatenated_output_path, aligned_audio_data, audio_property_set.metadata
-            )
-
             self.__cache_data.processed_files = replace_existing_cache(
                 self.__cache_data.processed_files,
                 SingleFileCache(
@@ -76,7 +81,16 @@ class AudioPropertySetsProcessor:
                 )
 
             )
+
             progress_bar.update(1)
+
+            self.__audio_file_processor.process(
+                audio_property_set,
+                target_level,
+                self.__generate_output_path(audio_property_set.file_path, output_path),
+                self.__audio_file_reader.read(audio_property_set.file_path),
+            )
+
         progress_bar.close()
 
         return self.__cache_data
