@@ -11,7 +11,7 @@ class MetaDataExtractor:
     ) -> AudioMetadata:
         try:
             metadata = File(file_path)
-            if not isinstance(metadata, FileType):
+            if metadata is None:
                 raise ValueError
 
             full_details = probe.full_details(file_path)

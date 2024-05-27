@@ -85,6 +85,20 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
             for tag in input_metadata.keys():
                 self.assertEqual(input_metadata[tag], output_metadata[tag])
 
+    def test_successful_double_processing(self):
+        self.__processor.process()
+
+        new_processor = WaveAlignmentProcessor(
+            self.__output_path,
+            self.__output_path,
+            window_size=WindowSize.LUFS_I,
+            target_level=-16,
+        )
+        try:
+            new_processor.process()
+        except Exception as e:
+            self.fail(f"Raised the following excepton {e}")
+
 def get_file_paths_with_ending(directory: str, ending: str):
     file_paths = []
     for root, _, files in os.walk(directory):
