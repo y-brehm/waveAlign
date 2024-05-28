@@ -1,7 +1,6 @@
 import mock
 import unittest
 
-from mutagen import FileType
 from wavealign.data_collection.write_metadata import write_metadata
 
 
@@ -11,7 +10,7 @@ class TestWriteMetadata(unittest.TestCase):
         self.mock_audio_metadata = mock.MagicMock()
 
     def test_write_valid_metadata(self, mock_mutagen_file):
-        mock_metadata = mock.MagicMock(spec=FileType)
+        mock_metadata = mock.MagicMock()
         mock_mutagen_file.return_value = mock_metadata
 
         write_metadata("some_path", self.mock_audio_metadata)

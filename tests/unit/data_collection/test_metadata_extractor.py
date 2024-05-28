@@ -1,15 +1,13 @@
 import mock
 import unittest
 
-from mutagen import FileType
-
 from wavealign.data_collection.metadata_extractor import MetaDataExtractor
 from wavealign.data_collection.audio_metadata import AudioMetadata
 
 
 class TestMetadataExtractor(unittest.TestCase):
     def setUp(self):
-        self.mock_metadata = mock.MagicMock(spec=FileType)
+        self.mock_metadata = mock.MagicMock()
         self.mock_details = {
             "streams": [
                 {
