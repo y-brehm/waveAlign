@@ -94,6 +94,7 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
             window_size=WindowSize.LUFS_I,
             target_level=-16,
         )
+
         try:
             new_processor.process()
         except Exception as e:
