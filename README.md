@@ -6,7 +6,7 @@ It aligns all input audio files according to their LUFS level. With WaveAlign, y
 
 # ⚡️Requirements
 * [ffmpeg >= 5.1](https://ffmpeg.org/)
-* [python >= 3.9](https://www.python.org/)
+* [python >= 3.11](https://www.python.org/)
 
 # 📦Installation
 ```bash
@@ -85,15 +85,15 @@ python wavealign.py [-i INPUT] [-o OUTPUT] [-w WINDOW_SIZE] [-t TARGET] [-r]
     -r, --read_only (bool, optional): Run in read-only mode. Only outputs LUFS of input files without processing them. Also outputs library dependent maximum LUFS. Default is False.
 
 # ✅Run Tests (for developers only)
+Make sure you have [poetry](https://python-poetry.org/) installed.
 
-Requires both `requirements.txt` and `dev_requirements.txt` to be installed:
-
+Create a local virtual environment using poetry and activate it:
 ```bash
-pip3 install -r requirements.txt && pip3 install -r dev_requirements.txt
+cd <path_to_wavealign_repository>
+poetry install
+poetry shell
 ```
-
 After that tests can be run from the main directory:
-
 ```bash
-python3 -m unittest discover
+pytest
 ```
