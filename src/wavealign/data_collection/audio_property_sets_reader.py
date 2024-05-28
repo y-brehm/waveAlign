@@ -6,6 +6,7 @@ from wavealign.data_collection.audio_property_set_generator import (
 )
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_finder import AudioFileFinder
+from wavealign.data_collection.cache_manager import CacheManager
 from wavealign.loudness_processing.window_size import WindowSize
 
 # TODO: Add progress bar #29
@@ -17,7 +18,7 @@ class AudioPropertySetsReader:
         self,
         input_path: str,
         window_size: WindowSize,
-        cache_manager=None,
+        cache_manager:  CacheManager | None = None,
     ):
         self.__input_path = input_path
         self.__audio_property_set_generator = AudioPropertySetGenerator(window_size)
