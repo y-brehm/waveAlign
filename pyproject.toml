@@ -1,0 +1,27 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "waveAlign"
+version = "1.0.0"
+description = "A python package for loudness alignment of audio files."
+homepage = "https://github.com/y-brehm/waveAlign"
+authors = ["Fettulf Industries Inc. <contact.systemctl@proton.me>"]
+packages = [
+    { include = "wavealign", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pyloudnorm = "0.1.1"
+numpy = "1.26.4"
+pyyaml = "6.0.1"
+librosa = "0.10.0"
+mutagen = "1.47.0"
+ffmpegio = "0.8.3"
+
+[tool.poetry.dev-dependencies]
+mock = "4.0.3"
+parameterized = "0.8.1"
+pytest = "7.4.0"
