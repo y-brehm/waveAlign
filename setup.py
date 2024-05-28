@@ -14,7 +14,7 @@ setup(
     packages=find_packages("src"),
     package_dir={"": "src"},
     py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
-    python_requires=">=3.9.*",
+    python_requires=">=3.11.*",
     install_requires=[
         "pyloudnorm==0.1.1",
         "numpy==1.24.3",
