@@ -22,11 +22,11 @@ class TestMetadataExtractor(unittest.TestCase):
         self.mock_probe_details = mock.patch(
             "wavealign.data_collection.metadata_extractor.probe.full_details"
         ).start()
-        self.mock_tag_load_file = mock.patch(
-            "wavealign.data_collection.metadata_extractor.load_file"
+        self.mock_mutagen_file = mock.patch(
+            "wavealign.data_collection.metadata_extractor.File"
         ).start()
 
-        self.mock_tag_load_file.return_value = self.mock_metadata
+        self.mock_mutagen_file.return_value = self.mock_metadata
         self.mock_probe_details.return_value = self.mock_details
 
     def tearDown(self):
@@ -46,9 +46,9 @@ class TestMetadataExtractor(unittest.TestCase):
 
 
 class TestMetadataExtractorAssert(unittest.TestCase):
-    @mock.patch("wavealign.data_collection.metadata_extractor.load_file")
-    def test_write_with_faulty_metadata(self, mock_tag_load_file):
-        mock_tag_load_file.return_value = None
+    @mock.patch("wavealign.data_collection.metadata_extractor.File")
+    def test_write_with_faulty_metadata(self, mock_mutagen_file):
+        mock_mutagen_file.return_value = None
 
         try:
             MetaDataExtractor().extract("some_path")
