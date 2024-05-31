@@ -90,7 +90,7 @@ Make sure you have [poetry](https://python-poetry.org/) installed.
 Create a local virtual environment using poetry and activate it:
 ```bash
 cd <path_to_wavealign_repository>
-poetry install
+poetry install --with dev
 poetry shell
 ```
 After that tests can be run from the main directory:

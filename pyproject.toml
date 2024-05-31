@@ -21,7 +21,7 @@ librosa = "0.10.0"
 mutagen = "1.47.0"
 ffmpegio = "0.8.3"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 mock = "4.0.3"
 parameterized = "0.8.1"
 pytest = "7.4.0"
