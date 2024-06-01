@@ -39,7 +39,7 @@ class AudioPropertySetsProcessor:
                 )
                 and self.__clipping_strategy == ClippingStrategy.SKIP
             ):
-                self.__logger.warning(f"{audio_property_set.file_path} was clipped, clipping strategy: {str(self.__clipping_strategy)}")
+                self.__logger.warning(f"{os.path.basename(audio_property_set.file_path)} was clipped, clipping strategy: {str(self.__clipping_strategy)}")
                 continue
 
             # TODO: add limiter here #20
