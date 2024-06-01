@@ -1,6 +1,6 @@
 import argparse
 
-from wavealign.data_collection.write_log_file import setup_logging, output_logfile_warning
+from wavealign.data_collection.logging_configuration import setup_logging, output_logfile_warning
 from wavealign.loudness_processing.window_size import WindowSize
 from wavealign.data_collection.wave_alignment_reader import WaveAlignmentReader
 from wavealign.wave_alignment_processor import WaveAlignmentProcessor
