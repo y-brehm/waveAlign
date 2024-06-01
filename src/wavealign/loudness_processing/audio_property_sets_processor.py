@@ -22,7 +22,7 @@ class AudioPropertySetsProcessor:
         self.__audio_file_writer = AudioFileWriter()
         self.__clipping_strategy = clipping_strategy
         self.__cache_data = cache_data
-        self.__logger = logging.getLogger("PROCESSOR")
+        self.__logger = logging.getLogger("AUDIO PROCESSOR")
 
     def process(
         self,
@@ -39,7 +39,10 @@ class AudioPropertySetsProcessor:
                 )
                 and self.__clipping_strategy == ClippingStrategy.SKIP
             ):
-                self.__logger.warning(f"{os.path.basename(audio_property_set.file_path)} was clipped, clipping strategy: {str(self.__clipping_strategy)}")
+                self.__logger.warning(
+                    f"{os.path.basename(audio_property_set.file_path)} was clipped, "
+                    f"clipping strategy: {str(self.__clipping_strategy)}"
+                )
                 continue
 
             # TODO: add limiter here #20

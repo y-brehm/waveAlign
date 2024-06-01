@@ -6,7 +6,6 @@ from wavealign.loudness_processing.window_size import WindowSize
 from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
 from wavealign.data_collection.caching_processor import CachingProcessor
 from wavealign.data_collection.cache_manager import CacheManager
-from wavealign.data_collection.write_log_file import check_log_file
 from wavealign.utility.ensure_path_exists import ensure_path_exists
 
 
@@ -42,5 +41,3 @@ class WaveAlignmentProcessor:
         )
 
         self.__caching_processor.write_cache(cache)
-
-        check_log_file() #TODO: Implement info for user properly

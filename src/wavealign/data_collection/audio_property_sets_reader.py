@@ -34,7 +34,10 @@ class AudioPropertySetsReader:
         ):
             try:
                 if self.__cache_manager and self.__cache_manager.is_cached(file_path):
-                    self.__logger.info(f"Skipping already processed file: {os.path.basename(file_path)}")
+                    self.__logger.info(
+                        f"Skipping already processed file: "
+                        f"{os.path.basename(file_path)}"
+                    )
                     continue
 
                 audio_property_set = self.__audio_property_set_generator.generate(
@@ -43,7 +46,10 @@ class AudioPropertySetsReader:
                 audio_property_sets.append(audio_property_set)
 
             except Exception as e:
-                self.__logger.warning(f"Error processing file: {os.path.basename(file_path)} : {e}")
+                self.__logger.warning(
+                    f"Error processing file: "
+                    f"{os.path.basename(file_path)} : {e}"
+                )
                 traceback.print_exc()
                 continue
 

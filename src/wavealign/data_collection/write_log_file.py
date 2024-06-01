@@ -1,11 +1,13 @@
 import os
-import time
 import logging.config
+
+
+LOGFILE_NAME = "wavealign.log"
 
 def create_logging_config(output_path: str) -> dict:
     log_file_path = os.path.join(
         output_path,
-        "wavealign.log",
+        LOGFILE_NAME,
     )
 
     logging_config = {
@@ -21,27 +23,28 @@ def create_logging_config(output_path: str) -> dict:
 
         },
         "handlers": {
-            "skipped_files": {
+            "info": {
                 "class": "logging.StreamHandler",
                 "level": "INFO",
                 "formatter": "console",
                 "stream": "ext://sys.stdout",
             },
-            "clipped_files": {
+            "warning": {
                 "class": "logging.handlers.RotatingFileHandler",
                 "level": "WARNING",
                 "formatter": "logfile",
                 "filename": log_file_path,
                 "maxBytes": 5000000,
                 "backupCount": 3,
-            }
+                "delay": True,
+            },
         },
         "loggers": {
             "root": {
                 "level": "INFO",
                 "handlers": [
-                    "skipped_files", 
-                    "clipped_files"
+                    "info",
+                    "warning"
                 ],
             }
         },
@@ -50,12 +53,11 @@ def create_logging_config(output_path: str) -> dict:
     return logging_config
 
 def setup_logging(output_path: str) -> None:
-    
     logging.config.dictConfig(create_logging_config(output_path))
 
-def check_log_file() -> None:
-    logger = logging.getLogger("__name__") #TODO: implementation
-    if logger.hasHandlers() and logger.level > 0:
+def output_logfile_warning(output_path: str) -> None:
+    log_file_path = os.path.join(output_path, LOGFILE_NAME)
+    if os.path.exists(log_file_path):
         print(
-            f"Some files were not processed successfully. "
-            f"Check the log file located at {logger.handlers[0].baseFilename} for details.")
+            f"\nSome files were not processed successfully. "
+            f"A log file at {log_file_path} was created.")
