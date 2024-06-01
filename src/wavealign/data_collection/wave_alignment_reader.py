@@ -3,6 +3,7 @@ from wavealign.data_collection.audio_property_sets_reader import AudioPropertySe
 from wavealign.data_collection.audio_property_sets_analyzer import (
     AudioPropertySetsAnalyzer,
 )
+from wavealign.data_collection.write_log_file import check_log_file
 from wavealign.loudness_processing.window_size import WindowSize
 
 
@@ -16,14 +17,15 @@ class WaveAlignmentReader:
         self.__audio_property_sets_analyzer = AudioPropertySetsAnalyzer()
 
     def read(self) -> tuple[list[AudioPropertySet], int]:
-        audio_property_sets, skipped_files = self.__audio_property_sets_reader.read()
+        audio_property_sets = self.__audio_property_sets_reader.read()
         library_dependent_target_level = (
             self.__audio_property_sets_analyzer.detect_target_value(audio_property_sets)
         )
         self.__print_audio_properties(
             audio_property_sets, library_dependent_target_level
         )
-        self.__print_skipped_files(skipped_files)
+        check_log_file()
+        # self.__print_skipped_files(skipped_files) #TODO: console handler
 
         return audio_property_sets, library_dependent_target_level
 
@@ -43,6 +45,6 @@ class WaveAlignmentReader:
             f"dB {self.__window_size.name}"
         )
 
-    def __print_skipped_files(self, skipped_files: list[str]) -> None:
-        for skipped_file in skipped_files:
-            print(f"Skipped file: {skipped_file}")
+    # def __print_skipped_files(self, skipped_files: list[str]) -> None:
+    #     for skipped_file in skipped_files:
+    #         print(f"Skipped file: {skipped_file}")

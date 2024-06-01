@@ -1,38 +1,74 @@
 import os
 import time
-import logging
+import logging.config
 
-
-def setup_logging(output_path: str) -> str:
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
+def create_logging_config(output_path: str) -> dict:
     log_file_path = os.path.join(
         output_path,
-        f"{timestamp}_wavealign.log",
+        "wavealign.log",
     )
 
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
+    logging_config = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "simple": {
+                "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            }
+        },
+        "handlers": {
+            "skipped_files": {
+                "class": "logging.StreamHandler",
+                "level": "INFO",
+                "formatter": "simple",
+                "stream": "ext://sys.stdout",
+            },
+            "clipped_files": {
+                "class": "logging.handlers.RotatingFileHandler",
+                "level": "WARNING",
+                "formatter": "simple",
+                "filename": log_file_path,
+                "maxBytes": 5000000,
+                "backupCount": 3,
+            }
+        },
+        "loggers": {
+            "root": {
+                "level": "INFO",
+                "handlers": [
+                    "skipped_files", 
+                    "clipped_files"
+                ],
+            }
+        },
+    }
 
-    file_handler = logging.FileHandler(log_file_path)
-    file_handler.setLevel(logging.INFO)
+    return logging_config
 
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    file_handler.setFormatter(formatter)
+def setup_logging(output_path: str) -> None:
+    
+    logging.config.dictConfig(create_logging_config(output_path))
 
-    logger.addHandler(file_handler)
+# don't use logging.info, but instead logger = logging.getLogger
+# def setup_logging(output_path: str) -> logging.Logger:
+#     logger = logging.getLogger("__name__")
+#     logger.setLevel(logging.INFO)
+#
+#     file_handler = logging.FileHandler(log_file_path)
+#     file_handler.setLevel(logging.INFO)
+#
+#     formatter = logging.Formatter(
+#         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+#     )
+#     file_handler.setFormatter(formatter)
+#
+#     logger.addHandler(file_handler)
+#
+#     return logger
 
-    return log_file_path
-
-def write_log_file(output_path: str, problem_files: list[str]) -> None:
-    log_file_path = setup_logging(output_path)
-    logger = logging.getLogger(__name__)
-
-    print(
-        f"Some files were not processed successfully. "
-        f"Check the log file located at {log_file_path} for details."
-    )
-    logger.info("The following files were not processed:")
-    for problem_file in problem_files:
-        logger.info(problem_file)
+def check_log_file() -> None:
+    logger = logging.getLogger("__name__") #TODO: implementation
+    if logger.hasHandlers() and logger.level > 0:
+        print(
+            f"Some files were not processed successfully. "
+            f"Check the log file located at {logger.handlers[0].baseFilename} for details.")

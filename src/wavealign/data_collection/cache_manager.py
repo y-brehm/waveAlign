@@ -13,6 +13,6 @@ class CacheManager:
         ) == last_modified and self.__target_level == self.__cache_data.get(
             "target_level"
         ):
-            print(f"Skipping already processed file: {file_path}")
+            # print(f"Skipping already processed file: {file_path}")
             return True
         return False
