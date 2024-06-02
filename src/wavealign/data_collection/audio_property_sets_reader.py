@@ -47,8 +47,7 @@ class AudioPropertySetsReader:
 
             except Exception as e:
                 self.__logger.warning(
-                    f"Error processing file: "
-                    f"{os.path.basename(file_path)} : {e}"
+                    f"Error processing file: " f"{os.path.basename(file_path)} : {e}"
                 )
                 traceback.print_exc()
                 continue
