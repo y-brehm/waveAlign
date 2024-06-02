@@ -31,7 +31,7 @@ class TestCachingProcessor(unittest.TestCase):
         cache_data = {"key": "value"}
         CachingProcessor("/fake/path").write_cache(cache_data)
 
-        mock_open.assert_called_once_with("/fake/path/wavealign_cache.yaml", "w")
+        mock_open.assert_called_once_with("/fake/path/.wavealign_cache.yaml", "w")
         mock_yaml_dump.assert_called_with(
             cache_data, mock_open(), default_flow_style=False
         )

@@ -5,7 +5,7 @@ import yaml
 class CachingProcessor:
     def __init__(self, cache_path: str):
         self.__cache_path = cache_path
-        self.__cache_signature = "wavealign_cache.yaml"
+        self.__cache_signature = ".wavealign_cache.yaml"
         if not cache_path:
             raise ValueError("Cache path must be provided")
 
