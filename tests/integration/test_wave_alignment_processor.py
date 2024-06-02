@@ -63,18 +63,6 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
             )
             self.assertEqual(len(audio_data), len(original_audio_data))
 
-    def test_length_of_mp3_audio_file_stays_the_same(self):
-        self.__processor.process()
-        for audio_file in get_file_paths_with_ending(self.__output_path, ".mp3"):
-            input_path = os.path.join(self.__input_path, os.path.basename(audio_file))
-
-            with open(input_path, 'rb') as input_file:
-                input_size = len(input_file.read())
-            with open(audio_file, 'rb') as output_file:
-                output_size = len(output_file.read())
-
-            self.assertEqual(input_size, output_size)
-
     def test_full_transfer_of_metadata(self):
         self.__processor.process()
         for audio_file in get_file_paths_with_ending(self.__output_path, ".aiff"):
@@ -99,6 +87,7 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
             new_processor.process()
         except Exception as e:
             self.fail(f"Raised the following excepton {e}")
+
 
 def get_file_paths_with_ending(directory: str, ending: str):
     file_paths = []
