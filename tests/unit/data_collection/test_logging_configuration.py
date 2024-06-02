@@ -29,6 +29,9 @@ class TestLoggingConfiguration(unittest.TestCase):
 
     @mock.patch("os.path.join", return_value="dummy_path")
     @mock.patch("os.path.exists", return_value=True)
+    @mock.patch(
+        "wavealign.data_collection.logging_configuration.warning_counts", "True"
+    )
     def test_output_logfile_warning(self, mock_os_path_exists, mock_os_path_join):
         output_path = "/path/to/directory"
 

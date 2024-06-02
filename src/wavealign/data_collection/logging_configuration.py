@@ -3,6 +3,14 @@ import logging.config
 
 
 LOGFILE_NAME = "wavealign.log"
+warning_counts = False
+
+
+class WarningHandler(logging.Handler):
+    def emit(self, record):
+        global warning_counts
+        if record.levelno == logging.WARNING:
+            warning_counts = True
 
 
 def create_logging_config(output_path: str) -> dict:
@@ -33,11 +41,15 @@ def create_logging_config(output_path: str) -> dict:
                 "backupCount": 3,
                 "delay": True,
             },
+            "warning_count": {
+                "class": "wavealign.data_collection.logging_configuration.WarningHandler",
+                "level": "WARNING",
+            },
         },
         "loggers": {
             "root": {
                 "level": "INFO",
-                "handlers": ["info", "warning"],
+                "handlers": ["info", "warning", "warning_count"],
             }
         },
     }
@@ -51,7 +63,8 @@ def setup_logging(output_path: str) -> None:
 
 def output_logfile_warning(output_path: str) -> None:
     log_file_path = os.path.join(output_path, LOGFILE_NAME)
-    if os.path.exists(log_file_path):
+
+    if os.path.exists(log_file_path) and warning_counts:
         print(
             f"\nSome files were not processed successfully. "
             f"A log file at {log_file_path} was written."
