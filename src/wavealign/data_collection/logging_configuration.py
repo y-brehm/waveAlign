@@ -5,10 +5,7 @@ import logging.config
 LOGFILE_NAME = "wavealign.log"
 
 def create_logging_config(output_path: str) -> dict:
-    log_file_path = os.path.join(
-        output_path,
-        LOGFILE_NAME,
-    )
+    log_file_path = os.path.join(output_path, LOGFILE_NAME)
 
     logging_config = {
         "version": 1,

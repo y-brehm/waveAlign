@@ -44,9 +44,15 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
 
     def test_processing_successful_skip_existing_files(self):
         self.__processor.process()
-        with mock.patch("sys.stdout", new_callable=StringIO) as mock_stdout:
+
+        with mock.patch(
+            "wavealign.data_collection.audio_property_sets_reader.logging.getLogger"
+        ) as mock_getlogger:
+            mock_logger = mock.MagicMock()
+            mock_getlogger.return_value = mock_logger
+
             self.__processor.process()
-            self.assertIn("Skipping already processed file", mock_stdout.getvalue())
+            mock_logger.info.assert_any_call(mock.ANY)
 
         for audio_file in get_file_paths_with_ending(self.__output_path, ".wav"):
             sample_rate, audio_data = wavfile.read(audio_file)
