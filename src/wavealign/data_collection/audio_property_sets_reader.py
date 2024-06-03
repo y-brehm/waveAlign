@@ -1,5 +1,6 @@
 import os
 import traceback
+import logging
 
 from wavealign.data_collection.audio_property_set_generator import (
     AudioPropertySetGenerator,
@@ -24,15 +25,19 @@ class AudioPropertySetsReader:
         self.__audio_property_set_generator = AudioPropertySetGenerator(window_size)
         self.__audio_file_finder = AudioFileFinder()
         self.__cache_manager = cache_manager
+        self.__logger = logging.getLogger("AUDIO READER")
 
-    def read(self) -> tuple[list[AudioPropertySet], list[str]]:
-        unprocessed_files = []
+    def read(self) -> list[AudioPropertySet]:
         audio_property_sets = []
         for file_path in self.__audio_file_finder.find(
             os.path.normpath(self.__input_path)
         ):
             try:
                 if self.__cache_manager and self.__cache_manager.is_cached(file_path):
+                    self.__logger.info(
+                        f"Skipping already processed file: "
+                        f"{os.path.basename(file_path)}"
+                    )
                     continue
 
                 audio_property_set = self.__audio_property_set_generator.generate(
@@ -41,12 +46,10 @@ class AudioPropertySetsReader:
                 audio_property_sets.append(audio_property_set)
 
             except Exception as e:
-                unprocessed_files.append((file_path, str(e)))
-                print(f"Error processing file {file_path}: {e}")
+                self.__logger.warning(
+                    f"Error processing file: " f"{os.path.basename(file_path)} : {e}"
+                )
                 traceback.print_exc()
                 continue
 
-        return audio_property_sets, [
-            unprocessed_file + ": " + error
-            for unprocessed_file, error in unprocessed_files
-        ]
+        return audio_property_sets

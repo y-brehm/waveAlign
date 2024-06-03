@@ -8,7 +8,6 @@ from wavealign.data_collection.audio_property_set_generator import (
 )
 from wavealign.loudness_processing.window_size import WindowSize
 
-
 class TestAudioPropertySetGenerator(unittest.TestCase):
     def setUp(self):
         self.mock_audio_file_reader = mock.patch(

@@ -16,14 +16,13 @@ class WaveAlignmentReader:
         self.__audio_property_sets_analyzer = AudioPropertySetsAnalyzer()
 
     def read(self) -> tuple[list[AudioPropertySet], int]:
-        audio_property_sets, skipped_files = self.__audio_property_sets_reader.read()
+        audio_property_sets = self.__audio_property_sets_reader.read()
         library_dependent_target_level = (
             self.__audio_property_sets_analyzer.detect_target_value(audio_property_sets)
         )
         self.__print_audio_properties(
             audio_property_sets, library_dependent_target_level
         )
-        self.__print_skipped_files(skipped_files)
 
         return audio_property_sets, library_dependent_target_level
 
@@ -42,7 +41,3 @@ class WaveAlignmentReader:
             f"{library_dependent_target_level} "
             f"dB {self.__window_size.name}"
         )
-
-    def __print_skipped_files(self, skipped_files: list[str]) -> None:
-        for skipped_file in skipped_files:
-            print(f"Skipped file: {skipped_file}")

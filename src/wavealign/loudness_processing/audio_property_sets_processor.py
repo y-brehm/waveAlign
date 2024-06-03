@@ -1,4 +1,5 @@
 import os
+import logging
 
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_reader import AudioFileReader
@@ -21,14 +22,14 @@ class AudioPropertySetsProcessor:
         self.__audio_file_writer = AudioFileWriter()
         self.__clipping_strategy = clipping_strategy
         self.__cache_data = cache_data
+        self.__logger = logging.getLogger("AUDIO PROCESSOR")
 
     def process(
         self,
         audio_property_sets: list[AudioPropertySet],
         target_level: int,
         output_path: str,
-    ) -> tuple[list[str], dict]:
-        clipped_files = []
+        ) -> dict:
         for audio_property_set in audio_property_sets:
             if (
                 clipping_detected(
@@ -38,7 +39,10 @@ class AudioPropertySetsProcessor:
                 )
                 and self.__clipping_strategy == ClippingStrategy.SKIP
             ):
-                clipped_files.append(audio_property_set.file_path)
+                self.__logger.warning(
+                    f"{os.path.basename(audio_property_set.file_path)} was clipped, "
+                    f"clipping strategy: {str(self.__clipping_strategy)}"
+                )
                 continue
 
             # TODO: add limiter here #20
@@ -62,12 +66,7 @@ class AudioPropertySetsProcessor:
 
         self.__cache_data["target_level"] = target_level
 
-        return [
-            clipped_file
-            + " was clipped, clipping strategy: "
-            + str(self.__clipping_strategy.name)
-            for clipped_file in clipped_files
-        ], self.__cache_data
+        return self.__cache_data
 
     def __generate_output_path(self, input_path: str, output_path: str) -> str:
         if not output_path:

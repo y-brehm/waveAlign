@@ -1,5 +1,6 @@
 import argparse
 
+from wavealign.data_collection.logging_configuration import setup_logging, output_logfile_warning
 from wavealign.loudness_processing.window_size import WindowSize
 from wavealign.data_collection.wave_alignment_reader import WaveAlignmentReader
 from wavealign.wave_alignment_processor import WaveAlignmentProcessor
@@ -53,6 +54,8 @@ def main():
     )
     args = parser.parse_args()
 
+    setup_logging(args.output if args.output else args.input)
+
     if args.read_only:
         print("### PROCESSING STARTED! READ-ONLY MODE ACTIVE!")
         wave_alignment_reader = WaveAlignmentReader(
@@ -74,7 +77,8 @@ def main():
             target_level=args.target,
         )
         wave_alignment_processor.process()
-
+    
+    output_logfile_warning(args.output if args.output else args.input)
     print("\n### PROCESSING FINISHED! ###")
 
 

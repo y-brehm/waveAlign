@@ -22,6 +22,14 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
         self.mock_align_waveform_to_target = mock.patch(
             "wavealign.loudness_processing.audio_property_sets_processor.align_waveform_to_target"
         ).start()
+        self.mock_getlogger = mock.patch(
+            "wavealign.data_collection.audio_property_sets_reader.logging.getLogger"
+        ).start()
+        self.mock_logger = mock.MagicMock()
+        self.mock_getlogger.return_value = self.mock_logger
+
+    def tearDown(self):
+        mock.patch.stopall()
 
     def test_process_all_clipping(self):
         processor = AudioPropertySetsProcessor(
@@ -50,9 +58,7 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
             ),
         ]
         target_level = -10
-        clipped_files, cache_data = processor.process(
-            test_files, target_level, fake_output_path
-        )
+        cache_data = processor.process(test_files, target_level, fake_output_path)
 
         self.mock_clipping_detected.assert_has_calls(
             [
@@ -60,12 +66,17 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
                 mock.call(-2, -15, target_level),
             ]
         )
-
-        expected_files = [
-            "file1.wav was clipped, clipping strategy: SKIP",
-            "file2.wav was clipped, clipping strategy: SKIP",
-        ]
-        self.assertListEqual(clipped_files, expected_files)
+        self.mock_getlogger.assert_called_once_with("AUDIO PROCESSOR")
+        self.mock_logger.warning.assert_has_calls(
+            [
+                mock.call(
+                    "file1.wav was clipped, clipping strategy: ClippingStrategy.SKIP"
+                ),
+                mock.call(
+                    "file2.wav was clipped, clipping strategy: ClippingStrategy.SKIP"
+                ),
+            ]
+        )
         self.assertDictEqual(cache_data, {"target_level": -10})
 
     def test_process_one_file_clipping(self):
@@ -96,9 +107,9 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
             ),
         ]
         target_level = -10
-        clipped_files, cache_data = processor.process(
-            test_files, target_level, fake_output_path
-        )
+        cache_data = processor.process(test_files, target_level, fake_output_path)
+
+        self.mock_getlogger.assert_called_once_with("AUDIO PROCESSOR")
 
         self.mock_clipping_detected.assert_has_calls(
             [
@@ -117,8 +128,8 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
         self.mock_audio_file_writer.return_value.write.assert_called_once_with(
             "path/to/fake_output/file1.wav", "aligned_audio_data", fake_metadata1
         )
-
-        self.assertEqual(
-            clipped_files, ["file2.wav was clipped, clipping strategy: SKIP"]
+        self.mock_logger.warning.assert_called_once_with(
+            "file2.wav was clipped, clipping strategy: ClippingStrategy.SKIP"
         )
+
         self.assertDictEqual(cache_data, {"file1.wav": 1234, "target_level": -10})
