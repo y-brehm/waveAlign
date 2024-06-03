@@ -63,9 +63,6 @@ class AudioPropertySetsProcessor:
             self.__cache_data[audio_property_set.file_path] = (
                 audio_property_set.last_modified
             )
-            self.__cache_data[audio_property_set.file_path] = (
-                audio_property_set.last_modified
-            )
             progress_bar.update(1)
 
         self.__cache_data["target_level"] = target_level

@@ -47,11 +47,11 @@ class AudioPropertySetsReader:
                 )
                 audio_property_sets.append(audio_property_set)
 
-            except Exception:
+            except Exception as e:
+                self.__logger.debug("", exc_info=True)
                 self.__logger.warning(
                     f"Error processing file: " f"{os.path.basename(file_path)}"
                 )
-                self.__logger.debug("", exc_info=True)
                 continue
 
             progress_bar.update(1)
