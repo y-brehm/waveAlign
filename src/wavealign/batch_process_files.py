@@ -52,9 +52,16 @@ def main():
         default=False,
         action=argparse.BooleanOptionalAction,
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        help="Save additional debugging information in log file.",
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
     args = parser.parse_args()
 
-    setup_logging(args.output if args.output else args.input)
+    setup_logging(args.output if args.output else args.input, args.verbose)
 
     if args.read_only:
         print("### PROCESSING STARTED! READ-ONLY MODE ACTIVE!")

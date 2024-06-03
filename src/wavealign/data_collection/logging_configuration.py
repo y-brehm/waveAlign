@@ -12,18 +12,24 @@ class WarningHandler(logging.Handler):
         if record.levelno == logging.WARNING:
             warning_counts = True
 
+class ExcludeWarningsFilter(logging.Filter):
+    def filter(self, record):
+        return record.levelno < logging.WARNING
 
-def create_logging_config(output_path: str) -> dict:
+def create_logging_config(output_path: str, verbose: bool) -> dict:
     log_file_path = os.path.join(output_path, LOGFILE_NAME)
+    if verbose:
+        log_level = "DEBUG"
+    else:
+        log_level = "INFO"
 
     logging_config = {
         "version": 1,
         "disable_existing_loggers": False,
         "formatters": {
-            "console": {
-                "format": "### %(name)s - %(message)s ###",
-            },
+            "console": {"format": "### %(name)s - %(message)s ###"},
             "logfile": {"format": "### %(asctime)s - %(name)s - %(message)s ###"},
+            "debug_log": {"format": "DEBUG INFORMATION: %(message)s"},
         },
         "handlers": {
             "info": {
@@ -31,6 +37,7 @@ def create_logging_config(output_path: str) -> dict:
                 "level": "INFO",
                 "formatter": "console",
                 "stream": "ext://sys.stdout",
+                "filters": ["exclude_warnings"]
             },
             "warning": {
                 "class": "logging.handlers.RotatingFileHandler",
@@ -45,11 +52,22 @@ def create_logging_config(output_path: str) -> dict:
                 "class": "wavealign.data_collection.logging_configuration.WarningHandler",
                 "level": "WARNING",
             },
+            "debug": {
+                "class": "logging.FileHandler",
+                "level": "DEBUG",
+                "formatter": "debug_log",
+                "filename": log_file_path,
+            },
+        },
+        "filters": {
+            "exclude_warnings": {
+                "class": "wavealign.data_collection.logging_configuration.ExcludeWarningsFilter",
+            }
         },
         "loggers": {
             "root": {
-                "level": "INFO",
-                "handlers": ["info", "warning", "warning_count"],
+                "level": log_level,
+                "handlers": ["info", "warning", "warning_count", "debug"],
             }
         },
     }
@@ -57,8 +75,8 @@ def create_logging_config(output_path: str) -> dict:
     return logging_config
 
 
-def setup_logging(output_path: str) -> None:
-    logging.config.dictConfig(create_logging_config(output_path))
+def setup_logging(output_path: str, verbose: bool) -> None:
+    logging.config.dictConfig(create_logging_config(output_path, verbose))
 
 
 def output_logfile_warning(output_path: str) -> None:

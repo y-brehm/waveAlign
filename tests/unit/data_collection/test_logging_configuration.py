@@ -12,8 +12,9 @@ class TestLoggingConfiguration(unittest.TestCase):
     @mock.patch("os.path.join", return_value="dummy_path")
     def test_create_logging_config(self, mock_os_path_join):
         output_path = "/path/to/directory"
+        verbose = False
 
-        create_logging_config(output_path)
+        create_logging_config(output_path, verbose)
 
         mock_os_path_join.assert_called_once_with(output_path, "wavealign.log")
 
@@ -21,8 +22,11 @@ class TestLoggingConfiguration(unittest.TestCase):
     @mock.patch("wavealign.data_collection.logging_configuration.create_logging_config")
     def test_setup_logging(self, mock_create_logging_config, mock_config_dictConfig):
         output_path = "/path/to/directory"
-        setup_logging(output_path)
-        mock_create_logging_config.assert_called_once_with(output_path)
+        verbose = False
+
+        setup_logging(output_path, verbose)
+
+        mock_create_logging_config.assert_called_once_with(output_path, verbose)
         mock_config_dictConfig.assert_called_once_with(
             mock_create_logging_config.return_value
         )

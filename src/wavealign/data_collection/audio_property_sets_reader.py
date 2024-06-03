@@ -1,5 +1,4 @@
 import os
-import traceback
 import logging
 
 from wavealign.data_collection.audio_property_set_generator import (
@@ -46,10 +45,10 @@ class AudioPropertySetsReader:
                 audio_property_sets.append(audio_property_set)
 
             except Exception as e:
+                self.__logger.debug("", exc_info=True)
                 self.__logger.warning(
                     f"Error processing file: " f"{os.path.basename(file_path)} : {e}"
                 )
-                traceback.print_exc()
                 continue
 
         return audio_property_sets
