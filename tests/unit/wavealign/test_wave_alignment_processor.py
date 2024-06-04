@@ -10,6 +10,7 @@ from wavealign.loudness_processing.audio_property_sets_processor import (
 from wavealign.wave_alignment_processor import (
     WaveAlignmentProcessor,
 )
+
 # TODO: use mock.patch.object also for other tests (seems cleaner)
 
 
@@ -18,7 +19,9 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
         self.mock_read_cache = mock.patch.object(
             CachingProcessor, "read_cache", return_value={}
         ).start()
-        self.mock_write_cache = mock.patch.object(CachingProcessor, "write_cache").start()
+        self.mock_write_cache = mock.patch.object(
+            CachingProcessor, "write_cache"
+        ).start()
         self.mock_audio_read = mock.patch.object(
             AudioPropertySetsReader, "read", return_value=([])
         ).start()
@@ -28,6 +31,7 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
         self.mock_ensure_path_exists = mock.patch(
             "wavealign.wave_alignment_processor.ensure_path_exists"
         ).start()
+        self.mock_read_cache.return_value = {"file1": 123}
 
         self.processor = WaveAlignmentProcessor(
             input_path="input_path",
@@ -44,6 +48,21 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
         self.processor.process()
 
         self.mock_ensure_path_exists.assert_called_once_with("output_path")
+        self.assertTrue(self.mock_read_cache.call_count, 2)
         self.mock_audio_read.assert_called_once()
         self.mock_audio_process.assert_called_once_with([], 10, "output_path")
-        self.mock_write_cache.assert_called_once_with({})
+        self.mock_write_cache.assert_called_once()
+
+    def test_process_same_cache(self):
+        self.mock_audio_process.return_value = {"file1": 123}
+
+        self.processor.process()
+
+        self.mock_write_cache.assert_not_called()
+
+    def test_process_cache_changed(self):
+        self.mock_audio_process.return_value = {"file2": 456}
+
+        self.processor.process()
+
+        self.mock_write_cache.assert_called_once()

@@ -29,7 +29,7 @@ class AudioPropertySetsProcessor:
         audio_property_sets: list[AudioPropertySet],
         target_level: int,
         output_path: str,
-        ) -> dict:
+    ) -> dict:
         for audio_property_set in audio_property_sets:
             if (
                 clipping_detected(
@@ -60,9 +60,9 @@ class AudioPropertySetsProcessor:
                 output, aligned_audio_data, audio_property_set.metadata
             )
 
-            self.__cache_data[
-                audio_property_set.file_path
-            ] = audio_property_set.last_modified
+            self.__cache_data[audio_property_set.file_path] = (
+                audio_property_set.last_modified
+            )
 
         self.__cache_data["target_level"] = target_level
 

@@ -25,7 +25,9 @@ class WaveAlignmentProcessor:
         self.__audio_property_sets_reader = AudioPropertySetsReader(
             input_path=input_path,
             window_size=window_size,
-            cache_manager=CacheManager(cache_data=cache_data, target_level=target_level)
+            cache_manager=CacheManager(
+                cache_data=cache_data, target_level=target_level
+            ),
         )
         self.__audio_property_sets_processor = AudioPropertySetsProcessor(
             cache_data=cache_data, clipping_strategy=clipping_strategy
@@ -33,6 +35,7 @@ class WaveAlignmentProcessor:
 
     def process(self) -> None:
         ensure_path_exists(self.__output_path)
+        cache_data = self.__caching_processor.read_cache()
 
         audio_property_sets = self.__audio_property_sets_reader.read()
 
@@ -40,4 +43,5 @@ class WaveAlignmentProcessor:
             audio_property_sets, self.__target_level, self.__output_path
         )
 
-        self.__caching_processor.write_cache(cache)
+        if not (cache == cache_data):
+            self.__caching_processor.write_cache(cache)

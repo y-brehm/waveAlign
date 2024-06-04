@@ -137,3 +137,5 @@ input/.DS_Store
 input/*.wav
 output/*.wav
 
+# generated files
+.wavealign_cache.yaml

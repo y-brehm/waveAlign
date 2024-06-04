@@ -92,7 +92,6 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
         except Exception as e:
             self.fail(f"Raised the following excepton {e}")
 
-
 def get_file_paths_with_ending(directory: str, ending: str):
     file_paths = []
     for root, _, files in os.walk(directory):
