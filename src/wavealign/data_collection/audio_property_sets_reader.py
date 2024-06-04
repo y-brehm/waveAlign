@@ -1,6 +1,10 @@
 import os
+import traceback
+<<<<<<< HEAD
 import logging
+=======
 from tqdm import tqdm
+>>>>>>> b1967db (implementation of progress output)
 
 from wavealign.data_collection.audio_property_set_generator import (
     AudioPropertySetGenerator,
@@ -18,7 +22,7 @@ class AudioPropertySetsReader:
         self,
         input_path: str,
         window_size: WindowSize,
-        cache_manager: CacheManager | None = None,
+        cache_manager:  CacheManager | None = None,
     ):
         self.__input_path = input_path
         self.__audio_property_set_generator = AudioPropertySetGenerator(window_size)
@@ -48,14 +52,14 @@ class AudioPropertySetsReader:
                 audio_property_sets.append(audio_property_set)
 
             except Exception as e:
-                self.__logger.debug("", exc_info=True)
                 self.__logger.warning(
-                    f"Error processing file: " f"{os.path.basename(file_path)}"
+                    f"Error processing file: " f"{os.path.basename(file_path)} : {e}"
                 )
+                traceback.print_exc()
                 continue
-
+            
             progress_bar.update(1)
-
+        
         progress_bar.close()
 
         return audio_property_sets
