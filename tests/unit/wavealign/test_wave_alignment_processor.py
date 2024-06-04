@@ -23,16 +23,13 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
             CachingProcessor, "write_cache"
         ).start()
         self.mock_audio_read = mock.patch.object(
-            AudioPropertySetsReader, "read", return_value=([], [])
+            AudioPropertySetsReader, "read", return_value=([])
         ).start()
         self.mock_audio_process = mock.patch.object(
-            AudioPropertySetsProcessor, "process", return_value=([], {})
+            AudioPropertySetsProcessor, "process", return_value=({})
         ).start()
         self.mock_ensure_path_exists = mock.patch(
             "wavealign.wave_alignment_processor.ensure_path_exists"
-        ).start()
-        self.mock_write_log_file = mock.patch(
-            "wavealign.wave_alignment_processor.write_log_file"
         ).start()
         self.mock_read_cache.return_value = {"file1": 123}
 
@@ -55,32 +52,16 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
         self.mock_audio_read.assert_called_once()
         self.mock_audio_process.assert_called_once_with([], 10, "output_path")
         self.mock_write_cache.assert_called_once()
-        self.mock_write_log_file.assert_not_called()
-
-    def test_process_with_problem_files(self):
-        self.mock_audio_read.return_value = ([], ["file1"])
-        self.mock_audio_process.return_value = (["file2"], {})
-
-        self.processor.process()
-
-        self.mock_ensure_path_exists.assert_called_once_with("output_path")
-        self.mock_audio_read.assert_called_once()
-        self.mock_audio_process.assert_called_once_with([], 10, "output_path")
-        self.mock_write_cache.assert_called_once()
-
-        self.mock_write_log_file.assert_called_once_with(
-            "output_path", ["file1", "file2"]
-        )
 
     def test_process_same_cache(self):
-        self.mock_audio_process.return_value = [[], {"file1": 123}]
+        self.mock_audio_process.return_value = {"file1": 123}
 
         self.processor.process()
 
         self.mock_write_cache.assert_not_called()
 
     def test_process_cache_changed(self):
-        self.mock_audio_process.return_value = [[], {"file2": 456}]
+        self.mock_audio_process.return_value = {"file2": 456}
 
         self.processor.process()
 
