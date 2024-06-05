@@ -1,5 +1,6 @@
 import os
 
+
 LOGFILE_NAME = "wavealign.log"
 
 
@@ -16,7 +17,12 @@ def create_logging_config(output_path: str, verbose: bool) -> dict:
         "formatters": {
             "console": {"format": "### %(name)s - %(message)s ###"},
             "logfile": {"format": "### %(asctime)s - %(name)s - %(message)s ###"},
-            "debug_log": {"format": "DEBUG INFORMATION: %(message)s"},
+            "debug": {"format": "### %(asctime)s - %(name)s - %(message)s ###"},
+        },
+        "filters": {
+            "exclude_warnings": {
+                "()": "wavealign.utility.logging.filters.ExcludeWarningsFilter",
+            },
         },
         "handlers": {
             "info": {
@@ -24,7 +30,7 @@ def create_logging_config(output_path: str, verbose: bool) -> dict:
                 "level": "INFO",
                 "formatter": "console",
                 "stream": "ext://sys.stdout",
-                "filters": ["exclude_warnings"],
+                "filters": [],
             },
             "warning": {
                 "class": "logging.handlers.RotatingFileHandler",
@@ -36,20 +42,16 @@ def create_logging_config(output_path: str, verbose: bool) -> dict:
                 "delay": True,
             },
             "warning_count": {
-                "class": "wavealign.data_collection.logging_configuration.WarningHandler",
+                "class": "wavealign.utility.logging.handlers.WarningHandler",
                 "level": "WARNING",
             },
             "debug": {
                 "class": "logging.FileHandler",
                 "level": "DEBUG",
-                "formatter": "debug_log",
+                "formatter": "debug",
                 "filename": log_file_path,
+                "filters": ["exclude_warnings"],
             },
-        },
-        "filters": {
-            "exclude_warnings": {
-                "class": "wavealign.data_collection.logging_configuration.ExcludeWarningsFilter",
-            }
         },
         "loggers": {
             "root": {
