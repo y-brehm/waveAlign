@@ -57,7 +57,10 @@ def create_logging_config(output_path: str, verbose: bool) -> dict:
             "root": {
                 "level": log_level,
                 "handlers": ["info", "warning", "warning_count", "debug"],
-            }
+            },
+            "ffmpegio": {
+                "propagate": False,
+            },
         },
     }
 
