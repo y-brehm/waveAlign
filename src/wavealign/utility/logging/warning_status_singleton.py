@@ -1,12 +1,12 @@
 from typing import Self
 
 
-class WarningStatusSigleton:
+class WarningStatusSingleton:
     _instance = None
 
     def __new__(cls) -> Self:
         if cls._instance is None:
-            cls._instance = super(WarningStatusSigleton, cls).__new__(cls)
+            cls._instance = super(WarningStatusSingleton, cls).__new__(cls)
             cls._instance.warning_counts = False
         return cls._instance
 
