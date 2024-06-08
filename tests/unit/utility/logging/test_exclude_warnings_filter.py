@@ -1,7 +1,7 @@
 import unittest
 import logging
 
-from wavealign.utility.logging.filters import ExcludeWarningsFilter
+from wavealign.utility.logging.exclude_warnings_filter import ExcludeWarningsFilter
 
 
 class TestExcludeWarningsFilter(unittest.TestCase):

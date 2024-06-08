@@ -4,7 +4,7 @@ import logging
 
 
 from wavealign.utility.logging.warning_status_singleton import WarningStatusSingleton
-from wavealign.utility.logging.handlers import WarningHandler
+from wavealign.utility.logging.warning_handler import WarningHandler
 
 
 class TestWarningHandler(unittest.TestCase):
