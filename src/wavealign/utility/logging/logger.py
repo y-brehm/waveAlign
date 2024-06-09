@@ -18,7 +18,10 @@ class Logger:
         else:
             log_level = "INFO"
 
-        with open("wavealign/utility/logging/logging_config.yaml", "r") as config_file:
+        config_file_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "logging_config.yaml"
+        )
+        with open(config_file_path, "r") as config_file:
             logging_config = yaml.safe_load(config_file)
 
             logging_config["handlers"]["warning"]["filename"] = self.__log_file_path
