@@ -1,9 +1,6 @@
 import os
-<<<<<<< HEAD
 import logging
-=======
 from tqdm import tqdm
->>>>>>> b1967db (implementation of progress output)
 
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_reader import AudioFileReader
@@ -32,7 +29,7 @@ class AudioPropertySetsProcessor:
         audio_property_sets: list[AudioPropertySet],
         target_level: int,
         output_path: str,
-        ) -> dict:
+    ) -> dict:
         progress_bar = tqdm(total=len(audio_property_sets), desc="PROCESSING")
         for audio_property_set in audio_property_sets:
             if (
@@ -63,9 +60,9 @@ class AudioPropertySetsProcessor:
                 output, aligned_audio_data, audio_property_set.metadata
             )
 
-            self.__cache_data[
-                audio_property_set.file_path
-            ] = audio_property_set.last_modified
+            self.__cache_data[audio_property_set.file_path] = (
+                audio_property_set.last_modified
+            )
             progress_bar.update(1)
 
         self.__cache_data["target_level"] = target_level
