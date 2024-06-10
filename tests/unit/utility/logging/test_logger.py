@@ -9,7 +9,7 @@ from wavealign.utility.logging.warning_status_singleton import WarningStatusSing
 class TestLogger(unittest.TestCase):
     def setUp(self):
         self.mock_dictConfig = mock.patch(
-            "wavealign.utility.logging.logger.logging.config.dictConfig"
+            "wavealign.utility.logging.logger.dictConfig"
         ).start()
         self.mock_yaml_load = mock.patch("yaml.safe_load").start()
         self.mock_open = mock.patch("builtins.open", read_data="{}").start()
