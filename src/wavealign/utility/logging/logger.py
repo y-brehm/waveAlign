@@ -1,4 +1,4 @@
-import logging.config
+from logging.config import dictConfig
 import yaml
 import os
 
@@ -6,17 +6,13 @@ from wavealign.utility.logging.warning_status_singleton import WarningStatusSing
 
 
 class Logger:
-    def __init__(self, output_path: str, verbose: bool):
+    def __init__(self, output_path: str, verbose: bool) -> None:
         self.__logfile_name = "wavealign.log"
         self.__logging_config = self.__create_logging_config(output_path, verbose)
-        logging.config.dictConfig(self.__logging_config)
+        dictConfig(self.__logging_config)
 
     def __create_logging_config(self, output_path: str, verbose: bool) -> dict:
         self.__log_file_path = os.path.join(output_path, self.__logfile_name)
-        if verbose:
-            log_level = "DEBUG"
-        else:
-            log_level = "INFO"
 
         config_file_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "logging_config.yaml"
@@ -26,7 +22,7 @@ class Logger:
 
             logging_config["handlers"]["warning"]["filename"] = self.__log_file_path
             logging_config["handlers"]["debug"]["filename"] = self.__log_file_path
-            logging_config["loggers"]["root"]["level"] = log_level
+            logging_config["loggers"]["root"]["level"] = "DEBUG" if verbose else "INFO"
 
         return logging_config
 
