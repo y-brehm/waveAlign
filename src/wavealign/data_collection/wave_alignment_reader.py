@@ -1,3 +1,5 @@
+import os
+
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_property_sets_reader import AudioPropertySetsReader
 from wavealign.data_collection.audio_property_sets_analyzer import (
@@ -33,8 +35,10 @@ class WaveAlignmentReader:
     ) -> None:
         for audio_property_set in audio_property_sets:
             print(
-                f"{audio_property_set.file_path} : {audio_property_set.original_lufs_level} "
-                f"dB {self.__window_size.name}"
+                f"FILE: {os.path.basename(audio_property_set.file_path)} "
+                f"ORIGINAL LUFS: {audio_property_set.original_lufs_level:.2f} "
+                f"dB {self.__window_size.name} "
+                f"ORIGINAL PEAK: {audio_property_set.original_peak_level:.2f}"
             )
         print(
             f"Library dependent target level: "

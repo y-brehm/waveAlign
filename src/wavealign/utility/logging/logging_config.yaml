@@ -12,10 +12,9 @@ filters:
     "()": wavealign.utility.logging.exclude_warnings_filter.ExcludeWarningsFilter
 handlers:
   info:
-    class: logging.StreamHandler
+    class: wavealign.utility.logging.tqdm_console_handler.TqdmConsoleHandler
     level: INFO
     formatter: console
-    stream: ext://sys.stdout
     filters: []
   warning:
     class: logging.handlers.RotatingFileHandler

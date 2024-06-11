@@ -1,4 +1,4 @@
-from mutagen import File, FileType
+from mutagen import File
 
 from wavealign.data_collection.audio_metadata import AudioMetadata
 

@@ -64,7 +64,7 @@ def main():
     logger = Logger(args.output if args.output else args.input, args.verbose)
 
     if args.read_only:
-        print("### PROCESSING STARTED! READ-ONLY MODE ACTIVE!")
+        print("### PROCESSING STARTED! READ-ONLY MODE ACTIVE! ###")
         wave_alignment_reader = WaveAlignmentReader(
             input_path=args.input,
             window_size=args.window_size,
