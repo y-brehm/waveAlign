@@ -44,6 +44,7 @@ class AudioPropertySetsProcessor:
                     f"{os.path.basename(audio_property_set.file_path)} was clipped, "
                     f"clipping strategy: {str(self.__clipping_strategy)}"
                 )
+                progress_bar.update(1)
                 continue
             # TODO: add limiter here #20
 

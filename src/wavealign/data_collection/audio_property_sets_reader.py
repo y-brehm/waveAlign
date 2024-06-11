@@ -40,21 +40,22 @@ class AudioPropertySetsReader:
                         f"Skipping already processed file: "
                         f"{os.path.basename(file_path)}"
                     )
+                    progress_bar.update(1)
                     continue
 
                 audio_property_set = self.__audio_property_set_generator.generate(
                     file_path
                 )
                 audio_property_sets.append(audio_property_set)
+                progress_bar.update(1)
 
             except Exception:
                 self.__logger.warning(
                     f"Error processing file: " f"{os.path.basename(file_path)}"
                 )
                 self.__logger.debug("", exc_info=True)
+                progress_bar.update(1)
                 continue
-
-            progress_bar.update(1)
 
         progress_bar.close()
 

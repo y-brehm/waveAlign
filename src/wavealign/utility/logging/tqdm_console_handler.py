@@ -3,7 +3,7 @@ from tqdm import tqdm
 
 
 class TqdmConsoleHandler(Handler):
-    def emit(self, record):
+    def emit(self, record) -> None:
         try:
             msg = self.format(record)
             tqdm.write(msg)
