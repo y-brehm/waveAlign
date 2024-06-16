@@ -4,8 +4,9 @@ from wavealign.loudness_processing.audio_property_sets_processor import (
 )
 from wavealign.loudness_processing.window_size import WindowSize
 from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
-from wavealign.data_collection.caching_processor import CachingProcessor
-from wavealign.data_collection.cache_manager import CacheManager
+from wavealign.caching.caching_processor import CachingProcessor
+from wavealign.caching.cache_manager import CacheManager
+from wavealign.caching.levels_cache_finder import LevelsCacheFinder
 from wavealign.utility.ensure_path_exists import ensure_path_exists
 
 
@@ -19,18 +20,21 @@ class WaveAlignmentProcessor:
         clipping_strategy: ClippingStrategy = ClippingStrategy.SKIP,
     ) -> None:
         self.__output_path = output_path
-        self.__target_level = target_level
         self.__caching_processor = CachingProcessor(cache_path=input_path)
         cache_data = self.__caching_processor.read_cache()
+
         self.__audio_property_sets_reader = AudioPropertySetsReader(
             input_path=input_path,
             window_size=window_size,
             cache_manager=CacheManager(
                 cache_data=cache_data, target_level=target_level
             ),
+            levels_cache_finder=LevelsCacheFinder(cache_data=cache_data),
         )
         self.__audio_property_sets_processor = AudioPropertySetsProcessor(
-            cache_data=cache_data, clipping_strategy=clipping_strategy
+            target_level=target_level,
+            cache_data=cache_data,
+            clipping_strategy=clipping_strategy,
         )
 
     def process(self) -> None:
@@ -40,7 +44,7 @@ class WaveAlignmentProcessor:
         audio_property_sets = self.__audio_property_sets_reader.read()
 
         cache = self.__audio_property_sets_processor.process(
-            audio_property_sets, self.__target_level, self.__output_path
+            audio_property_sets, self.__output_path
         )
 
         if not (cache == cache_data):
