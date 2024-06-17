@@ -4,10 +4,9 @@ from tqdm import tqdm
 
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_reader import AudioFileReader
-from wavealign.data_collection.audio_file_writer import AudioFileWriter
 from wavealign.loudness_processing.clipping_detected import clipping_detected
 from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
-
+from wavealign.loudness_processing.process_audio_file import process_audio_file
 from wavealign.loudness_processing.align_waveform_to_target import (
     align_waveform_to_target,
 )
@@ -19,7 +18,6 @@ from wavealign.loudness_processing.align_waveform_to_target import (
 class AudioPropertySetsProcessor:
     def __init__(self, clipping_strategy: ClippingStrategy, cache_data: dict):
         self.__audio_file_reader = AudioFileReader()
-        self.__audio_file_writer = AudioFileWriter()
         self.__clipping_strategy = clipping_strategy
         self.__cache_data = cache_data
         self.__logger = logging.getLogger("AUDIO PROCESSOR")
@@ -46,25 +44,19 @@ class AudioPropertySetsProcessor:
                 )
                 progress_bar.update(1)
                 continue
+
             # TODO: add limiter here #20
-
-            audio_data = self.__audio_file_reader.read(audio_property_set.file_path)
-            aligned_audio_data = align_waveform_to_target(
-                audio_data, audio_property_set.original_lufs_level, target_level
-            )
-
-            output = self.__generate_output_path(
-                audio_property_set.file_path, output_path
-            )
-
-            self.__audio_file_writer.write(
-                output, aligned_audio_data, audio_property_set.metadata
-            )
 
             self.__cache_data[audio_property_set.file_path] = (
                 audio_property_set.last_modified
             )
-            progress_bar.update(1)
+
+            process_audio_file(
+                audio_property_set,
+                target_level,
+                self.__generate_output_path(audio_property_set.file_path, output_path),
+                self.__audio_file_reader.read(audio_property_set.file_path),
+            )
 
         self.__cache_data["target_level"] = target_level
         progress_bar.close()
