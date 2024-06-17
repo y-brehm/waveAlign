@@ -1,3 +1,5 @@
+from numpy import ndarray
+
 from wavealign.loudness_processing.process_compressed_file import (
     process_compressed_file,
 )
@@ -11,7 +13,7 @@ def process_audio_file(
     audio_property_set: AudioPropertySet,
     target_level: int,
     file_output_path: str,
-    audio_data: bytes,
+    audio_data: ndarray,
 ) -> None:
     if audio_property_set.metadata.codec_name == "mp3":
         process_compressed_file(audio_property_set, target_level, file_output_path)

@@ -10,6 +10,4 @@ def align_waveform_to_target(
 ) -> np.ndarray:
     gain_factor = db_to_gain(target_level - original_audio_level)
 
-    print("INTERNAL: Gain adjustment: " + str(target_level - original_audio_level))
-
     return np.multiply(audio_data, gain_factor)

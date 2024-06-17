@@ -11,7 +11,6 @@ def process_compressed_file(
     gain_adjustment = str(
         0.75 * (target_level - audio_property_set.original_lufs_level)
     )
-    print("AACGAIN: Gain adjustment: " + gain_adjustment)
 
     if output_file_path != audio_property_set.file_path:
         shutil.copy(audio_property_set.file_path, output_file_path)
@@ -25,9 +24,9 @@ def process_compressed_file(
     result = subprocess.run(
         [
             aacgain_path,
+            "-q",
             "-g",
             gain_adjustment,
-            "-q",
             output_file_path,
         ]
     )
