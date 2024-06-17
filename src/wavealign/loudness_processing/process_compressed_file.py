@@ -8,7 +8,10 @@ from wavealign.data_collection.audio_property_set import AudioPropertySet
 def process_compressed_file(
     audio_property_set: AudioPropertySet, target_level: int, output_file_path: str
 ) -> None:
-    gain_adjustment = str(target_level - audio_property_set.original_lufs_level)
+    gain_adjustment = str(
+        0.75 * (target_level - audio_property_set.original_lufs_level)
+    )
+    print("AACGAIN: Gain adjustment: " + gain_adjustment)
 
     if output_file_path != audio_property_set.file_path:
         shutil.copy(audio_property_set.file_path, output_file_path)
