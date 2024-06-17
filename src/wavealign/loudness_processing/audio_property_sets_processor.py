@@ -50,6 +50,7 @@ class AudioPropertySetsProcessor:
             self.__cache_data[audio_property_set.file_path] = (
                 audio_property_set.last_modified
             )
+            progress_bar.update(1)
 
             process_audio_file(
                 audio_property_set,
