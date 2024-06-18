@@ -13,14 +13,11 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
         self.mock_audio_file_reader = mock.patch(
             "wavealign.loudness_processing.audio_property_sets_processor.AudioFileReader"
         ).start()
-        self.mock_audio_file_writer = mock.patch(
-            "wavealign.loudness_processing.audio_property_sets_processor.AudioFileWriter"
-        ).start()
         self.mock_clipping_detected = mock.patch(
             "wavealign.loudness_processing.audio_property_sets_processor.clipping_detected"
         ).start()
-        self.mock_align_waveform_to_target = mock.patch(
-            "wavealign.loudness_processing.audio_property_sets_processor.align_waveform_to_target"
+        self.mock_audio_file_processor = mock.patch(
+            "wavealign.loudness_processing.audio_property_sets_processor.AudioFileProcessor"
         ).start()
         self.mock_getlogger = mock.patch(
             "wavealign.data_collection.audio_property_sets_reader.logging.getLogger"
@@ -84,7 +81,6 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
             clipping_strategy=ClippingStrategy.SKIP, cache_data={}
         )
         self.mock_clipping_detected.side_effect = [False, True]
-        self.mock_align_waveform_to_target.return_value = "aligned_audio_data"
 
         fake_output_path = "path/to/fake_output"
         fake_metadata1 = mock.MagicMock()
@@ -120,13 +116,11 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
         self.mock_audio_file_reader.return_value.read.assert_called_once_with(
             "file1.wav"
         )
-        self.mock_align_waveform_to_target.assert_called_once_with(
-            self.mock_audio_file_reader.return_value.read.return_value,
-            -14,
+        self.mock_audio_file_processor.return_value.process.assert_called_once_with(
+            test_files[0],
             target_level,
-        )
-        self.mock_audio_file_writer.return_value.write.assert_called_once_with(
-            "path/to/fake_output/file1.wav", "aligned_audio_data", fake_metadata1
+            "path/to/fake_output/file1.wav",
+            self.mock_audio_file_reader.return_value.read.return_value,
         )
         self.mock_logger.warning.assert_called_once_with(
             "file2.wav was clipped, clipping strategy: ClippingStrategy.SKIP"

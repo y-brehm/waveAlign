@@ -6,10 +6,7 @@ from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_reader import AudioFileReader
 from wavealign.loudness_processing.clipping_detected import clipping_detected
 from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
-from wavealign.loudness_processing.process_audio_file import process_audio_file
-from wavealign.loudness_processing.align_waveform_to_target import (
-    align_waveform_to_target,
-)
+from wavealign.loudness_processing.audio_file_processor import AudioFileProcessor
 
 # TODO: switch from dict to dataclass for cache_data #30
 # TODO: write more data to cache_data (e.g. original peak level, original lufs level) #30
@@ -21,6 +18,7 @@ class AudioPropertySetsProcessor:
         self.__clipping_strategy = clipping_strategy
         self.__cache_data = cache_data
         self.__logger = logging.getLogger("AUDIO PROCESSOR")
+        self.__audio_file_processor = AudioFileProcessor()
 
     def process(
         self,
@@ -52,7 +50,7 @@ class AudioPropertySetsProcessor:
             )
             progress_bar.update(1)
 
-            process_audio_file(
+            self.__audio_file_processor.process(
                 audio_property_set,
                 target_level,
                 self.__generate_output_path(audio_property_set.file_path, output_path),
