@@ -1,6 +1,5 @@
 import mock
 import unittest
-import numpy as np
 
 from wavealign.loudness_processing.uncompressed_file_processor import (
     UncompressedFileProcessor,
