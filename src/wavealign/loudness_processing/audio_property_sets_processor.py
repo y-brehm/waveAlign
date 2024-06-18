@@ -4,6 +4,7 @@ import logging
 from wavealign.caching.levels import Levels
 from wavealign.caching.yaml_cache import YamlCache
 from wavealign.caching.single_file_cache import SingleFileCache
+from wavealign.caching.replace_existing_cache import replace_existing_cache
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_reader import AudioFileReader
 from wavealign.data_collection.audio_file_writer import AudioFileWriter
@@ -67,17 +68,18 @@ class AudioPropertySetsProcessor:
                 output, aligned_audio_data, audio_property_set.metadata
             )
 
-            # TODO: overwrite existing cache entries if file paths already exist
+            new_single_file_cache = SingleFileCache(
+                file_path=audio_property_set.file_path,
+                last_modified=os.path.getmtime(audio_property_set.file_path),
+                levels=Levels(
+                    lufs=float(audio_property_set.original_lufs_level),
+                    peak=float(audio_property_set.original_peak_level),
+                ),
+            )
 
-            self.__cache_data.processed_files.append(
-                SingleFileCache(
-                    file_path=audio_property_set.file_path,
-                    last_modified=os.path.getmtime(audio_property_set.file_path),
-                    levels=Levels(
-                        lufs=float(audio_property_set.original_lufs_level),
-                        peak=float(audio_property_set.original_peak_level),
-                    ),
-                )
+            self.__cache_data.processed_files = replace_existing_cache(
+                self.__cache_data.processed_files,
+                new_single_file_cache,
             )
 
         return self.__cache_data

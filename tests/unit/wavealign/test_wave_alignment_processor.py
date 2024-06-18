@@ -3,7 +3,7 @@ import mock
 from wavealign.loudness_processing.window_size import WindowSize
 from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
 from wavealign.data_collection.audio_property_sets_reader import AudioPropertySetsReader
-from wavealign.data_collection.caching_processor import CachingProcessor
+from wavealign.caching.yaml_cache_processor import YamlCacheProcessor
 from wavealign.loudness_processing.audio_property_sets_processor import (
     AudioPropertySetsProcessor,
 )
@@ -17,10 +17,10 @@ from wavealign.wave_alignment_processor import (
 class TestWaveAlignmentProcessor(unittest.TestCase):
     def setUp(self):
         self.mock_read_cache = mock.patch.object(
-            CachingProcessor, "read_cache", return_value={}
+            YamlCacheProcessor, "read_cache", return_value={}
         ).start()
         self.mock_write_cache = mock.patch.object(
-            CachingProcessor, "write_cache"
+            YamlCacheProcessor, "write_cache"
         ).start()
         self.mock_audio_read = mock.patch.object(
             AudioPropertySetsReader, "read", return_value=([])

@@ -6,7 +6,7 @@ from wavealign.utility.convert_dict_to_dataclass import convert_dict_to_dataclas
 from wavealign.caching.yaml_cache import YamlCache
 
 
-class CachingProcessor:
+class YamlCacheProcessor:
     def __init__(self, cache_path: str) -> None:
         self.__cache_path = cache_path
         self.__cache_signature = ".wavealign_cache.yaml"

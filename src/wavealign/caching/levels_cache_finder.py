@@ -1,4 +1,5 @@
 import os
+import logging
 
 from wavealign.caching.levels import Levels
 from wavealign.caching.yaml_cache import YamlCache
@@ -7,6 +8,7 @@ from wavealign.caching.yaml_cache import YamlCache
 class LevelsCacheFinder:
     def __init__(self, cache_data: YamlCache | None) -> None:
         self.__cache_data = cache_data
+        self.__logger = logging.getLogger("LEVELS CACHE FINDER")
 
     def get_levels(self, file_path: str) -> Levels | None:
         if self.__cache_data is None:
@@ -19,6 +21,7 @@ class LevelsCacheFinder:
                 single_file_cache.file_path == file_path
                 and single_file_cache.last_modified == last_modified
             ):
+                self.__logger.debug(f"Found levels for {file_path} in cache.")
                 return single_file_cache.levels
 
         return None
