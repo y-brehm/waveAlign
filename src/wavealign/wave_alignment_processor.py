@@ -4,6 +4,7 @@ from wavealign.loudness_processing.audio_property_sets_processor import (
 )
 from wavealign.loudness_processing.window_size import WindowSize
 from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
+from wavealign.loudness_processing.clipping_strategy_manager import ClippingStrategyManager
 from wavealign.caching.yaml_cache_processor import YamlCacheProcessor
 from wavealign.caching.cache_manager import CacheManager
 from wavealign.caching.levels_cache_finder import LevelsCacheFinder
@@ -34,7 +35,9 @@ class WaveAlignmentProcessor:
         self.__audio_property_sets_processor = AudioPropertySetsProcessor(
             target_level=target_level,
             cache_data=cache_data,
-            clipping_strategy=clipping_strategy,
+            clipping_strategy_manager=ClippingStrategyManager(
+                clipping_strategy=clipping_strategy, target_level=target_level
+            ),
         )
 
     def process(self) -> None:
