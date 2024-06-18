@@ -83,6 +83,7 @@ python wavealign.py [-i INPUT] [-o OUTPUT] [-w WINDOW_SIZE] [-t TARGET] [-r]
     -w, --window_size (enum, optional): Specify the window size. Follows the Reaper LUFS calculation windows: LUFS-S (3 seconds), LUFS-M (4 seconds), LUFS-I (integrated - whole file)
     -t, --target (int, optional): Specify the target loudness level in dB. Has to be between -30 and -9. Default is -14.
     -r, --read_only (bool, optional): Run in read-only mode. Only outputs LUFS of input files without processing them. Also outputs library dependent maximum LUFS. Default is False.
+    -v, --verbose (bool, optional): Save additional debugging information in log file.
 
 # ✅Run Tests (for developers only)
 Make sure you have [poetry](https://python-poetry.org/) installed.

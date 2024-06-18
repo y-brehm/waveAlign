@@ -1,5 +1,6 @@
 import os
 import logging
+from tqdm import tqdm
 
 from wavealign.caching.levels import Levels
 from wavealign.caching.yaml_cache import YamlCache
@@ -13,8 +14,6 @@ from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
 from wavealign.loudness_processing.align_waveform_to_target import (
     align_waveform_to_target,
 )
-
-# TODO: add progress bar #29
 
 
 class AudioPropertySetsProcessor:
@@ -38,6 +37,7 @@ class AudioPropertySetsProcessor:
         audio_property_sets: list[AudioPropertySet],
         output_path: str,
     ) -> YamlCache:
+        progress_bar = tqdm(total=len(audio_property_sets), desc="PROCESSING")
         for audio_property_set in audio_property_sets:
             if (
                 clipping_detected(
@@ -51,8 +51,8 @@ class AudioPropertySetsProcessor:
                     f"{os.path.basename(audio_property_set.file_path)} was clipped, "
                     f"clipping strategy: {str(self.__clipping_strategy)}"
                 )
+                progress_bar.update(1)
                 continue
-
             # TODO: add limiter here #20
 
             audio_data = self.__audio_file_reader.read(audio_property_set.file_path)
@@ -76,11 +76,13 @@ class AudioPropertySetsProcessor:
                     peak=float(audio_property_set.original_peak_level),
                 ),
             )
-
+            
             self.__cache_data.processed_files = replace_existing_cache(
                 self.__cache_data.processed_files,
                 new_single_file_cache,
             )
+            progress_bar.update(1)
+        progress_bar.close()
 
         return self.__cache_data
 
