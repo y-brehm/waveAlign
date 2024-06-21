@@ -4,7 +4,10 @@ from wavealign.loudness_processing.audio_property_sets_processor import (
 )
 from wavealign.loudness_processing.window_size import WindowSize
 from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
-from wavealign.loudness_processing.clipping_strategy_manager import ClippingStrategyManager
+from wavealign.loudness_processing.clipping_strategy_manager import (
+    ClippingStrategyManager,
+)
+from wavealign.caching.yaml_cache import YamlCache
 from wavealign.caching.yaml_cache_processor import YamlCacheProcessor
 from wavealign.caching.cache_manager import CacheManager
 from wavealign.caching.levels_cache_finder import LevelsCacheFinder
@@ -20,17 +23,20 @@ class WaveAlignmentProcessor:
         target_level: int,
         clipping_strategy: ClippingStrategy = ClippingStrategy.SKIP,
     ) -> None:
+        self.__target_level = target_level
         self.__output_path = output_path
         self.__yaml_cache_processor = YamlCacheProcessor(cache_path=input_path)
-        cache_data = self.__yaml_cache_processor.read_cache()
+        (
+            cache_data,
+            cache_manager,
+            levels_cache_finder,
+        ) = self.__setup_cache_management()
 
         self.__audio_property_sets_reader = AudioPropertySetsReader(
             input_path=input_path,
             window_size=window_size,
-            cache_manager=CacheManager(
-                cache_data=cache_data, target_level=target_level
-            ),
-            levels_cache_finder=LevelsCacheFinder(cache_data=cache_data),
+            cache_manager=cache_manager,
+            levels_cache_finder=levels_cache_finder,
         )
         self.__audio_property_sets_processor = AudioPropertySetsProcessor(
             target_level=target_level,
@@ -49,6 +55,23 @@ class WaveAlignmentProcessor:
         cache = self.__audio_property_sets_processor.process(
             audio_property_sets, self.__output_path
         )
+        cache.target_level = self.__target_level
 
         if not (cache == cache_data):
             self.__yaml_cache_processor.write_cache(cache)
+
+    def __setup_cache_management(
+        self,
+    ) -> tuple[YamlCache | None, CacheManager | None, LevelsCacheFinder | None]:
+        if self.__output_path is None:
+            cache_data = self.__yaml_cache_processor.read_cache()
+            cache_manager = CacheManager(
+                cache_data=cache_data, target_level=self.__target_level
+            )
+            levels_cache_finder = LevelsCacheFinder(cache_data=cache_data)
+        else:
+            cache_data = None
+            cache_manager = None
+            levels_cache_finder = None
+
+        return cache_data, cache_manager, levels_cache_finder

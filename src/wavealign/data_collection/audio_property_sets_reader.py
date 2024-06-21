@@ -24,7 +24,6 @@ class AudioPropertySetsReader:
         self.__audio_property_set_generator = AudioPropertySetGenerator(
             window_size, levels_cache_finder
         )
-        self.__audio_file_finder = AudioFileFinder()
         self.__cache_manager = cache_manager
         self.__logger = logging.getLogger("AUDIO READER")
         self.files_to_process = AudioFileFinder().find(

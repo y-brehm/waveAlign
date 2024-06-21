@@ -14,6 +14,7 @@ from wavealign.loudness_processing.clipping_strategy_manager import (
 from wavealign.loudness_processing.align_waveform_to_target import (
     align_waveform_to_target,
 )
+from wavealign.loudness_processing.get_new_peak_level import get_new_peak_level
 
 
 class AudioPropertySetsProcessor:
@@ -65,8 +66,12 @@ class AudioPropertySetsProcessor:
                     file_path=audio_property_set.file_path,
                     last_modified=os.path.getmtime(audio_property_set.file_path),
                     levels=Levels(
-                        lufs=float(audio_property_set.original_lufs_level),
-                        peak=float(audio_property_set.original_peak_level),
+                        lufs=float(self.__target_level),
+                        peak=get_new_peak_level(
+                            audio_property_set.original_peak_level,
+                            audio_property_set.original_lufs_level,
+                            self.__target_level,
+                        ),
                     ),
                 )
 
