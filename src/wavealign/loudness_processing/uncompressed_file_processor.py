@@ -15,12 +15,12 @@ class UncompressedFileProcessor:
         self,
         audio_property_set: AudioPropertySet,
         target_level: int,
-        file_path: str,
+        output_file_path: str,
         audio_data: ndarray,
     ) -> None:
         aligned_audio_data = align_waveform_to_target(
             audio_data, audio_property_set.original_lufs_level, target_level
         )
         self.__audio_file_writer.write(
-            file_path, aligned_audio_data, audio_property_set.metadata
+            output_file_path, aligned_audio_data, audio_property_set.metadata
         )

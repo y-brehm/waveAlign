@@ -1,5 +1,6 @@
 import mock
 import unittest
+import os
 
 from wavealign.caching.yaml_cache import YamlCache
 from wavealign.loudness_processing.clipping_strategy_manager import ClippingStrategyManager
@@ -25,6 +26,7 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
         ).start()
         self.mock_logger = mock.MagicMock()
         self.mock_getlogger.return_value = self.mock_logger
+        self.fake_output_path = os.path.join("path", "to", "fake_output")
 
     def tearDown(self):
         mock.patch.stopall()
@@ -42,7 +44,6 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
             cache_data=yaml_cache
                 )
 
-        fake_output_path = "path/to/fake_output"
         fake_metadata1 = mock.MagicMock()
         fake_metadata2 = mock.MagicMock()
 
@@ -62,7 +63,8 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
                 metadata=fake_metadata2,
             ),
         ]
-        _ = processor.process(test_files, fake_output_path)
+        target_level = -10
+        cache_data = processor.process(test_files, target_level, self.fake_output_path)
 
         self.mock_getlogger.assert_called_once_with("CLIPPING STRATEGY MANAGER")
         self.mock_logger.warning.assert_has_calls(
@@ -83,7 +85,6 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
         )
         self.mock_clipping_detected.side_effect = [False, True]
 
-        fake_output_path = "path/to/fake_output"
         fake_metadata1 = mock.MagicMock()
         fake_metadata2 = mock.MagicMock()
 
@@ -104,7 +105,7 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
             ),
         ]
         target_level = -10
-        cache_data = processor.process(test_files, target_level, fake_output_path)
+        cache_data = processor.process(test_files, target_level, self.fake_output_path)
 
         self.mock_getlogger.assert_called_once_with("AUDIO PROCESSOR")
 
@@ -120,7 +121,7 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
         self.mock_audio_file_processor.return_value.process.assert_called_once_with(
             test_files[0],
             target_level,
-            "path/to/fake_output/file1.wav",
+            os.path.join(self.fake_output_path, "file1.wav"),
             self.mock_audio_file_reader.return_value.read.return_value,
         )
         self.mock_logger.warning.assert_called_once_with(

@@ -18,15 +18,15 @@ class AudioFileProcessor:
         self,
         audio_property_set: AudioPropertySet,
         target_level: int,
-        file_output_path: str,
+        output_path: str,
         audio_data: ndarray,
     ) -> None:
 
         if audio_property_set.metadata.codec_name == "mp3":
             self.__compressed_file_processor.process(
-                audio_property_set, target_level, file_output_path
+                audio_property_set, target_level, output_path
             )
         else:
             self.__uncompressed_file_processor.process(
-                audio_property_set, target_level, file_output_path, audio_data
+                audio_property_set, target_level, output_path, audio_data
             )
