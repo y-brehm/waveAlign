@@ -9,14 +9,17 @@ waveAlign
 <h4 align="center">
   <a href="https://github.com/y-brehm/waveAlign/actions/workflows/run_tests.yml">
     <img src="https://github.com/y-brehm/waveAlign/actions/workflows/run_tests.yml/badge.svg"
-    alt="continuous integration" style="height: 20px;">
+    alt="testing status" style="height: 20px;">
+  </a>
+  <a href="">
+    <img src="" alt="LICENSE PLACEHOLDER" style="height: 20px">
   </a>
 </h4>
 
 <p style='text-align: justify;'>
 WaveAlign is a Python command-line tool designed to end the loudness war between
 DJs by aligning the loudness levels of songs to a specific LUFS level.
-Loudness Units relative to Full Scale (LUFS) alignment provides provides several
+Loudness Units relative to Full Scale (LUFS) alignment provides several
 advantages as compared to peak normalization:
 <ul>
   <li><b>Consistent perceived loudness: </b>
@@ -37,25 +40,25 @@ Rekodbox(R) remains unchanged at their respective positions prior to processing.
 </p>
 <p align="center">
   <a href="#quickstart">Quickstart</a> •
-  <a href="#recommendations">Recommendations</a> •
+  <a href="#details">Details</a> •
   <a href="#full-featureset">Full Featureset</a> •
   <a href="#run-tests">Run Tests</a>
 </p>
 
 ## Quickstart
 
-#### ⚡️ Requirements
+### ⚡️ Requirements
 
 * [ffmpeg >= 5.1](https://ffmpeg.org/)
 * [python >= 3.11](https://www.python.org/)
 
-#### 📦 Installation
+### 📦 Installation
 
 ```bash
 pip3 install git+https://github.com/y-brehm/waveAlign
 ```
 
-#### 🚀 Usage
+### 🚀 Usage
 
 ##### Display Argument Parser Help
 
@@ -95,9 +98,13 @@ LUFS, storing the processed files in the ./output folder:
 python3 -m wavealign.batch_process_files -i ./your/songs -o ./output -t -16
 ````
 
-## Recommendations
+## Details
 
-#### 🔌 waveAlignment of your USB Stick
+### 🎶 Supported file types
+
+placeholderplaceholder
+
+### 🔌 waveAlignment of your USB Stick
 
 We recommend running waveAlign on your USB stick every time you export new
 tracks from your library management tool (e.g. Rekordbox(r)).
@@ -114,7 +121,7 @@ your original music library on your PC untouched. This means you always have
 access to your original files, while your USB stick carries the
 loudness-aligned tracks for your gigs.  
 
-#### 💻 waveAlignment of your library
+### 💻 waveAlignment of your library
 
 While it is recommended to use waveAlign directly on the files on your USB stick,
 it is also possible to run waveAlign on your full music library. Please make sure
@@ -127,7 +134,7 @@ which usually require de-coding and en-coding for processing.
 
 In case you add new tracks after processing just run waveAlign again.
 
-#### 🎛️ Detailed preferences
+### 🎛️ Detailed preferences
 
 The default settings of WaveAlign, -12 LUFS (target level) and LUFS-S
 (window size), are optimized for most use cases, so there's usually
@@ -139,7 +146,7 @@ no need to specify a user target level or a different target window.
 python wavealign.py [-i INPUT] [-o OUTPUT] [-w WINDOW_SIZE] [-t TARGET] [-r]
 ```
 
-#### 📋 Arguments
+### 📋 Arguments
 
     -i, --input (str): Specify an input directory to look for audio. Nested structures are allowed.
     -o, --output (str): Specify the output directory to save the processed data. If set to None, the original data is overwritten. Nested folder structures will be dissolved.
@@ -148,7 +155,7 @@ python wavealign.py [-i INPUT] [-o OUTPUT] [-w WINDOW_SIZE] [-t TARGET] [-r]
     -r, --read_only (bool, optional): Run in read-only mode. Only outputs LUFS of input files without processing them. Also outputs library dependent maximum LUFS. Default is False.
     -v, --verbose (bool, optional): Save additional debugging information in log file.
 
-#### 💾 Caching
+### 💾 Caching
 
 WaveAlign employs an efficient caching mechanism to optimize its processing time.
 Caching makes use of a YAML file, which is generated in the input folder after
