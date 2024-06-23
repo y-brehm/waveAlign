@@ -1,5 +1,6 @@
 import os
 import logging
+import concurrent.futures
 from tqdm import tqdm
 
 from wavealign.data_collection.audio_property_set_generator import (
@@ -27,39 +28,41 @@ class AudioPropertySetsReader:
         self.files_to_process = AudioFileFinder().find(
             os.path.normpath(self.__input_path)
         )
+        self.__audio_property_sets = []
 
     def read(self) -> list[AudioPropertySet]:
-        audio_property_sets = []
         self.__print_files_to_process(self.files_to_process)
         progress_bar = tqdm(total=len(self.files_to_process), desc="READING")
 
-        for file_path in self.files_to_process:
-            try:
-                if self.__cache_manager and self.__cache_manager.is_cached(file_path):
-                    self.__logger.info(
-                        f"Skipping already processed file: "
-                        f"{os.path.basename(file_path)}"
-                    )
-                    progress_bar.update(1)
-                    continue
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            futures = [
+                executor.submit(self._compile_audio_property_sets, file_to_process)
+                for file_to_process in self.files_to_process
+            ]
 
-                audio_property_set = self.__audio_property_set_generator.generate(
-                    file_path
-                )
-                audio_property_sets.append(audio_property_set)
+            for future in concurrent.futures.as_completed(futures):
+                self.__audio_property_sets.append(future.result())
                 progress_bar.update(1)
-
-            except Exception:
-                self.__logger.warning(
-                    f"Error processing file: " f"{os.path.basename(file_path)}"
-                )
-                self.__logger.debug("", exc_info=True)
-                progress_bar.update(1)
-                continue
 
         progress_bar.close()
 
-        return audio_property_sets
+        return self.__audio_property_sets
+
+    def _compile_audio_property_sets(self, file_path: str) -> AudioPropertySet:
+        try:
+            if self.__cache_manager and self.__cache_manager.is_cached(file_path):
+                self.__logger.info(
+                    f"Skipping already processed file: "
+                    f"{os.path.basename(file_path)}"
+                )
+
+            return self.__audio_property_set_generator.generate(file_path)
+
+        except Exception:
+            self.__logger.warning(
+                f"Error processing file: " f"{os.path.basename(file_path)}"
+            )
+            self.__logger.debug("", exc_info=True)
 
     def __print_files_to_process(self, files_to_process: list[str]) -> None:
         print(f"### OVERALL FILES TO PROCESS: {len(files_to_process)} ###\n")

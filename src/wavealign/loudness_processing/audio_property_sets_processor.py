@@ -26,50 +26,47 @@ class AudioPropertySetsProcessor:
 
     def process(
         self,
-        audio_property_sets: list[AudioPropertySet],
+        audio_property_set: AudioPropertySet,
         target_level: int,
         output_path: str,
-    ) -> dict:
-        progress_bar = tqdm(total=len(audio_property_sets), desc="PROCESSING")
-        for audio_property_set in audio_property_sets:
-            if (
-                clipping_detected(
-                    audio_property_set.original_peak_level,
-                    audio_property_set.original_lufs_level,
-                    target_level,
-                )
-                and self.__clipping_strategy == ClippingStrategy.SKIP
-            ):
-                self.__logger.warning(
-                    f"{os.path.basename(audio_property_set.file_path)} was clipped, "
-                    f"clipping strategy: {str(self.__clipping_strategy)}"
-                )
-                progress_bar.update(1)
-                continue
-            # TODO: add limiter here #20
-
-            audio_data = self.__audio_file_reader.read(audio_property_set.file_path)
-            aligned_audio_data = align_waveform_to_target(
-                audio_data, audio_property_set.original_lufs_level, target_level
+    ) -> tuple[str, float]:
+        # progress_bar = tqdm(total=len(audio_property_set), desc="PROCESSING")
+        if (
+            clipping_detected(
+                audio_property_set.original_peak_level,
+                audio_property_set.original_lufs_level,
+                target_level,
             )
-
-            output = self.__generate_output_path(
-                audio_property_set.file_path, output_path
+            and self.__clipping_strategy == ClippingStrategy.SKIP
+        ):
+            self.__logger.warning(
+                f"{os.path.basename(audio_property_set.file_path)} was clipped, "
+                f"clipping strategy: {str(self.__clipping_strategy)}"
             )
+            # progress_bar.update(1)
+        # TODO: add limiter here #20
 
-            self.__audio_file_writer.write(
-                output, aligned_audio_data, audio_property_set.metadata
-            )
+        audio_data = self.__audio_file_reader.read(audio_property_set.file_path)
+        aligned_audio_data = align_waveform_to_target(
+            audio_data, audio_property_set.original_lufs_level, target_level
+        )
 
-            self.__cache_data[audio_property_set.file_path] = (
-                audio_property_set.last_modified
-            )
-            progress_bar.update(1)
+        output = self.__generate_output_path(audio_property_set.file_path, output_path)
 
-        self.__cache_data["target_level"] = target_level
-        progress_bar.close()
+        self.__audio_file_writer.write(
+            output, aligned_audio_data, audio_property_set.metadata
+        )
 
-        return self.__cache_data
+        # self.__cache_data[audio_property_set.file_path] = (
+        #     audio_property_set.last_modified
+        # )
+        # progress_bar.update(1)
+        return audio_property_set.file_path, audio_property_set.last_modified
+
+        # self.__cache_data["target_level"] = target_level
+        # progress_bar.close()
+        #
+        # return self.__cache_data
 
     def __generate_output_path(self, input_path: str, output_path: str) -> str:
         if not output_path:
