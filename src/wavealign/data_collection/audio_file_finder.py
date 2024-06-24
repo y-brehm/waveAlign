@@ -7,8 +7,11 @@ class AudioFileFinder:
         audio_file_paths = []
         for root, _, files in os.walk(abs_start_dir):
             for file_name in files:
-                if self.__is_supported_audio_file(file_name):
+                if self.__is_supported_audio_file(
+                    file_name
+                ) and not self.__is_hdnsh_track(file_name):
                     audio_file_paths.append(os.path.join(root, file_name))
+                    print(file_name)
 
         return audio_file_paths
 
@@ -18,3 +21,7 @@ class AudioFileFinder:
         supported_file_extensions = [".wav", ".aiff", ".aif", ".mp3", ".m4a", ".flac"]
 
         return file_extension in supported_file_extensions
+
+    @staticmethod
+    def __is_hdnsh_track(file_name: str) -> bool:
+        return file_name.startswith("_hdnsh")
