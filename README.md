@@ -11,8 +11,8 @@ waveAlign
     <img src="https://github.com/y-brehm/waveAlign/actions/workflows/run_tests.yml/badge.svg"
     alt="testing status" style="height: 20px;">
   </a>
-  <a href="">
-    <img src="" alt="LICENSE PLACEHOLDER" style="height: 20px">
+  <a href="https://www.gnu.org/licenses/gpl-3.0">
+    <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="LICENSE PLACEHOLDER" style="height: 20px">
   </a>
 </h4>
 
@@ -102,7 +102,11 @@ python3 -m wavealign.batch_process_files -i ./your/songs -o ./output -t -16
 
 ### 🎶 Supported file types
 
-placeholderplaceholder
+All Rekordbox(r) supported file types **except .m4a** are supported:  
+
+```
+.wav, .aiff, .aif, .mp3, .flac
+```
 
 ### 🔌 waveAlignment of your USB Stick
 
