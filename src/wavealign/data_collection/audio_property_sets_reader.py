@@ -41,6 +41,7 @@ class AudioPropertySetsReader:
             ]
 
             for future in concurrent.futures.as_completed(futures):
+                # TODO: try except block?
                 self.__audio_property_sets.append(future.result())
                 progress_bar.update(1)
 
@@ -48,7 +49,7 @@ class AudioPropertySetsReader:
 
         return self.__audio_property_sets
 
-    def _compile_audio_property_sets(self, file_path: str) -> AudioPropertySet:
+    def _compile_audio_property_sets(self, file_path: str) -> AudioPropertySet | None:
         try:
             if self.__cache_manager and self.__cache_manager.is_cached(file_path):
                 self.__logger.info(

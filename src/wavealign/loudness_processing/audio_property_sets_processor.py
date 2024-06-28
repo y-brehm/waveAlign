@@ -1,6 +1,5 @@
 import os
 import logging
-from tqdm import tqdm
 
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_reader import AudioFileReader
@@ -21,6 +20,7 @@ class AudioPropertySetsProcessor:
         self.__audio_file_reader = AudioFileReader()
         self.__audio_file_writer = AudioFileWriter()
         self.__clipping_strategy = clipping_strategy
+        # TODO: Remove cache data?
         self.__cache_data = cache_data
         self.__logger = logging.getLogger("AUDIO PROCESSOR")
 
@@ -30,7 +30,6 @@ class AudioPropertySetsProcessor:
         target_level: int,
         output_path: str,
     ) -> tuple[str, float]:
-        # progress_bar = tqdm(total=len(audio_property_set), desc="PROCESSING")
         if (
             clipping_detected(
                 audio_property_set.original_peak_level,
@@ -43,7 +42,6 @@ class AudioPropertySetsProcessor:
                 f"{os.path.basename(audio_property_set.file_path)} was clipped, "
                 f"clipping strategy: {str(self.__clipping_strategy)}"
             )
-            # progress_bar.update(1)
         # TODO: add limiter here #20
 
         audio_data = self.__audio_file_reader.read(audio_property_set.file_path)
@@ -57,16 +55,7 @@ class AudioPropertySetsProcessor:
             output, aligned_audio_data, audio_property_set.metadata
         )
 
-        # self.__cache_data[audio_property_set.file_path] = (
-        #     audio_property_set.last_modified
-        # )
-        # progress_bar.update(1)
         return audio_property_set.file_path, audio_property_set.last_modified
-
-        # self.__cache_data["target_level"] = target_level
-        # progress_bar.close()
-        #
-        # return self.__cache_data
 
     def __generate_output_path(self, input_path: str, output_path: str) -> str:
         if not output_path:
