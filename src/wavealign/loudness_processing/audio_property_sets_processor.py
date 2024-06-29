@@ -52,12 +52,12 @@ class AudioPropertySetsProcessor:
                 audio_data, audio_property_set.original_lufs_level, self.__target_level
             )
 
-            output = self.__generate_output_path(
+            output_path = self.__generate_output_path(
                 audio_property_set.file_path, output_path
             )
 
             self.__audio_file_writer.write(
-                output, aligned_audio_data, audio_property_set.metadata
+                output_path, aligned_audio_data, audio_property_set.metadata
             )
 
             self.__cache_data.processed_files = replace_existing_cache(

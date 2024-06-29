@@ -8,7 +8,7 @@ from wavealign.caching.yaml_cache import YamlCache
 class LevelsCacheFinder:
     def __init__(self, cache_data: YamlCache | None) -> None:
         self.__cache_data = cache_data
-        self.__logger = logging.getLogger("LEVELS CACHE FINDER")
+        self.__logger = logging.getLogger(__name__)
 
     def get_levels(self, file_path: str) -> Levels | None:
         if self.__cache_data is None:

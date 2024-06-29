@@ -8,7 +8,7 @@ class CacheManager:
     def __init__(self, cache_data: YamlCache | None, target_level: int) -> None:
         self.__cache_data = cache_data
         self.__target_level = target_level
-        self.__logger = logging.getLogger("CACHE MANAGER")
+        self.__logger = logging.getLogger(__name__)
 
     def is_cached(self, file_path: str) -> bool:
         last_modified = os.path.getmtime(file_path)
@@ -26,9 +26,9 @@ class CacheManager:
                 and single_file_cache.last_modified == last_modified
             ):
                 self.__logger.debug(
-                    f"CacheManage has found {file_path} in cache. Skipping processing."
+                    f"CacheManager has found {file_path} in cache. Skipping processing."
                 )
                 return True
 
-        self.__logger.debug(f"CacheManage has not found {file_path} in cache. Processing.")
+        self.__logger.debug(f"CacheManager has not found {file_path} in cache. Processing.")
         return False

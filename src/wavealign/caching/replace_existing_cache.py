@@ -2,7 +2,7 @@ from wavealign.caching.single_file_cache import SingleFileCache
 
 
 def replace_existing_cache(
-        original_cache_list: list[SingleFileCache], new_single_file_cache: SingleFileCache
+        original_cache_list: list[SingleFileCache] | None, new_single_file_cache: SingleFileCache
         ) -> list[SingleFileCache]:
     if original_cache_list is None:
         return [new_single_file_cache]
