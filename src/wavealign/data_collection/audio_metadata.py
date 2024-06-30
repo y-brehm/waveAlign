@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from mutagen import FileType
 
+
 @dataclass
 class AudioMetadata:
     num_channels: float

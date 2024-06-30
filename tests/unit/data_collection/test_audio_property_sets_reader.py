@@ -79,14 +79,14 @@ class TestAudioPropertySetsReader(unittest.TestCase):
             AudioPropertySet("dummy_path_2", 456, -14, -1, metadata=mock.MagicMock()),
         ]
 
-        mock_cache_manager = mock.MagicMock()
-        mock_cache_manager.is_cached.side_effect = [
+        mock_cache_validator = mock.MagicMock()
+        mock_cache_validator.is_cached.side_effect = [
             True,
             False,
         ]
 
         reader = AudioPropertySetsReader(
-            "input_path", WindowSize.LUFS_S, cache_manager=mock_cache_manager
+            "input_path", WindowSize.LUFS_S, cache_validator=mock_cache_validator
         )
         audio_property_sets = reader.read()
 
@@ -99,7 +99,7 @@ class TestAudioPropertySetsReader(unittest.TestCase):
         )
         self.assertEqual(len(audio_property_sets), 1)
         self.assertEqual(audio_property_sets[0].file_path, "dummy_path_2")
-        mock_cache_manager.is_cached.assert_has_calls(
+        mock_cache_validator.is_cached.assert_has_calls(
             [mock.call("dummy_path_1"), mock.call("dummy_path_2")]
         )
         self.mock_logger.info.assert_called_once()

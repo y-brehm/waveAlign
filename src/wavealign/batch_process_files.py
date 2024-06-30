@@ -69,7 +69,7 @@ def main():
             input_path=args.input,
             window_size=args.window_size,
         )
-        # TODO: make this output usable for further processing
+        # TODO: optional: make this output usable for further processing
         _, _ = wave_alignment_reader.read()
     else:
         print(

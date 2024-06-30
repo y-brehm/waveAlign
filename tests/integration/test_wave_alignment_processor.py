@@ -35,7 +35,7 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
 
     def tearDown(self):
         self.__temp_dir.cleanup()
-        for file in glob.glob(os.path.join(self.__input_path, "*.yaml")):
+        for file in glob.glob(os.path.join(self.__input_path, ".*.yaml")):
             os.remove(file)
         mock.patch.stopall()
 
@@ -50,7 +50,6 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
     def test_processing_successful_skip_existing_files(self):
         self.__processor.process()
         self.__processor.process()
-        self.mock_logger.info.assert_any_call(mock.ANY)
 
         for audio_file in get_file_paths_with_ending(self.__output_path, ".wav"):
             sample_rate, audio_data = wavfile.read(audio_file)
@@ -91,6 +90,7 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
             new_processor.process()
         except Exception as e:
             self.fail(f"Raised the following excepton {e}")
+
 
 def get_file_paths_with_ending(directory: str, ending: str):
     file_paths = []
