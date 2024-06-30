@@ -35,7 +35,7 @@ class TestWaveAlignmentProcessor(unittest.TestCase):
 
     def tearDown(self):
         self.__temp_dir.cleanup()
-        for file in glob.glob(os.path.join(self.__input_path, "*.yaml")):
+        for file in glob.glob(os.path.join(self.__input_path, ".*.yaml")):
             os.remove(file)
         mock.patch.stopall()
 
