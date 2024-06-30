@@ -8,7 +8,7 @@ from wavealign.data_collection.audio_property_set_generator import (
 )
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.data_collection.audio_file_finder import AudioFileFinder
-from wavealign.caching.cache_manager import CacheManager
+from wavealign.caching.cache_validator import CacheValidator
 from wavealign.loudness_processing.window_size import WindowSize
 
 
@@ -17,14 +17,14 @@ class AudioPropertySetsReader:
         self,
         input_path: str,
         window_size: WindowSize,
-        cache_manager: CacheManager | None = None,
+        cache_validator: CacheValidator | None = None,
         levels_cache_finder: LevelsCacheFinder | None = None,
     ):
         self.__input_path = input_path
         self.__audio_property_set_generator = AudioPropertySetGenerator(
             window_size, levels_cache_finder
         )
-        self.__cache_manager = cache_manager
+        self.__cache_validator = cache_validator
         self.__logger = logging.getLogger("AUDIO READER")
         self.files_to_process = AudioFileFinder().find(
             os.path.normpath(self.__input_path)
@@ -37,7 +37,7 @@ class AudioPropertySetsReader:
 
         for file_path in self.files_to_process:
             try:
-                if self.__cache_manager and self.__cache_manager.is_cached(file_path):
+                if self.__cache_validator and self.__cache_validator.is_cached(file_path):
                     self.__logger.info(
                         f"Skipping already processed file: "
                         f"{os.path.basename(file_path)}"

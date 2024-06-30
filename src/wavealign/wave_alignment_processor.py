@@ -9,7 +9,7 @@ from wavealign.loudness_processing.clipping_strategy_manager import (
 )
 from wavealign.caching.yaml_cache import YamlCache
 from wavealign.caching.yaml_cache_processor import YamlCacheProcessor
-from wavealign.caching.cache_manager import CacheManager
+from wavealign.caching.cache_validator import CacheValidator
 from wavealign.caching.levels_cache_finder import LevelsCacheFinder
 from wavealign.utility.ensure_path_exists import ensure_path_exists
 
@@ -28,14 +28,14 @@ class WaveAlignmentProcessor:
         self.__yaml_cache_processor = YamlCacheProcessor(cache_path=input_path)
         (
             cache_data,
-            cache_manager,
+            cache_validator,
             levels_cache_finder,
         ) = self.__setup_cache_management()
 
         self.__audio_property_sets_reader = AudioPropertySetsReader(
             input_path=input_path,
             window_size=window_size,
-            cache_manager=cache_manager,
+            cache_validator=cache_validator,
             levels_cache_finder=levels_cache_finder,
         )
         self.__audio_property_sets_processor = AudioPropertySetsProcessor(
@@ -62,16 +62,16 @@ class WaveAlignmentProcessor:
 
     def __setup_cache_management(
         self,
-    ) -> tuple[YamlCache | None, CacheManager | None, LevelsCacheFinder | None]:
+    ) -> tuple[YamlCache | None, CacheValidator | None, LevelsCacheFinder | None]:
         if self.__output_path is None:
             cache_data = self.__yaml_cache_processor.read_cache()
-            cache_manager = CacheManager(
+            cache_validator = CacheValidator(
                 cache_data=cache_data, target_level=self.__target_level
             )
             levels_cache_finder = LevelsCacheFinder(cache_data=cache_data)
         else:
             cache_data = None
-            cache_manager = None
+            cache_validator = None
             levels_cache_finder = None
 
-        return cache_data, cache_manager, levels_cache_finder
+        return cache_data, cache_validator, levels_cache_finder

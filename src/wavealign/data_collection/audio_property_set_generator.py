@@ -27,20 +27,8 @@ class AudioPropertySetGenerator:
         last_modified = os.path.getmtime(file_path)
         metadata = self.__metadata_extractor.extract(file_path)
 
-        if self.__levels_cache_finder is not None:
-            cached_levels = self.__levels_cache_finder.get_levels(file_path)
-
-            if cached_levels is not None:
-
-                return AudioPropertySet(
-                    file_path=file_path,
-                    last_modified=last_modified,
-                    original_lufs_level=cached_levels.lufs,
-                    original_peak_level=cached_levels.peak,
-                    metadata=metadata,
-                )
-        lufs_level, peak_level = self.__get_audio_levels(
-            audio_data, metadata.sample_rate
+        lufs_level, peak_level = self.__get_cached_or_calculated_levels(
+            file_path, audio_data, metadata.sample_rate
         )
         return AudioPropertySet(
             file_path=file_path,
@@ -49,6 +37,17 @@ class AudioPropertySetGenerator:
             original_peak_level=peak_level,
             metadata=metadata,
         )
+
+    def __get_cached_or_calculated_levels(
+        self, file_path: str, audio_data: np.ndarray, sample_rate: int
+    ) -> tuple[float, float]:
+        if self.__levels_cache_finder:
+            cached_levels = self.__levels_cache_finder.get_levels(file_path)
+
+            if cached_levels:
+                return cached_levels.lufs, cached_levels.peak
+
+        return self.__get_audio_levels(audio_data, sample_rate)
 
     def __get_audio_levels(
         self, audio_data: np.ndarray, sample_rate: int
