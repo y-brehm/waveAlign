@@ -15,6 +15,6 @@ class AudioFileFinder:
     @staticmethod
     def __is_supported_audio_file(file_name: str) -> bool:
         file_extension = os.path.splitext(file_name)[1]
-        supported_file_extensions = [".wav", ".aiff", ".aif", ".mp3", ".m4a", ".flac"]
+        supported_file_extensions = [".wav", ".aiff", ".aif", ".mp3", ".flac"]
 
         return file_extension in supported_file_extensions

@@ -1,8 +1,11 @@
 import mock
 import unittest
+import os
 
 from wavealign.caching.yaml_cache import YamlCache
-from wavealign.loudness_processing.clipping_strategy_manager import ClippingStrategyManager
+from wavealign.loudness_processing.clipping_strategy_manager import (
+    ClippingStrategyManager,
+)
 from wavealign.loudness_processing.clipping_strategy import ClippingStrategy
 from wavealign.data_collection.audio_property_set import AudioPropertySet
 from wavealign.loudness_processing.audio_property_sets_processor import (
@@ -17,33 +20,30 @@ class TestAudioPropertySetsProcessor(unittest.TestCase):
         self.mock_audio_file_reader = mock.patch(
             "wavealign.loudness_processing.audio_property_sets_processor.AudioFileReader"
         ).start()
-        self.mock_audio_file_writer = mock.patch(
-            "wavealign.loudness_processing.audio_property_sets_processor.AudioFileWriter"
-        ).start()
-        self.mock_align_waveform_to_target = mock.patch(
-            "wavealign.loudness_processing.audio_property_sets_processor.align_waveform_to_target"
+        self.mock_audio_file_processor = mock.patch(
+            "wavealign.loudness_processing.audio_property_sets_processor.AudioFileProcessor"
         ).start()
         self.mock_getlogger = mock.patch(
             "wavealign.data_collection.audio_property_sets_reader.logging.getLogger"
         ).start()
         self.mock_logger = mock.MagicMock()
         self.mock_getlogger.return_value = self.mock_logger
+        self.fake_output_path = os.path.join("path", "to", "fake_output")
 
     def tearDown(self):
         mock.patch.stopall()
 
     def test_process_all_clipping(self):
         clipping_strategy_manager = ClippingStrategyManager(
-            target_level=-10,
-            clipping_strategy=ClippingStrategy.SKIP
-            )
+            target_level=-10, clipping_strategy=ClippingStrategy.SKIP
+        )
         yaml_cache = YamlCache(processed_files=[], target_level=-10)
 
         processor = AudioPropertySetsProcessor(
             clipping_strategy_manager=clipping_strategy_manager,
             target_level=-10,
-            cache_data=yaml_cache
-                )
+            cache_data=yaml_cache,
+        )
 
         fake_output_path = "path/to/fake_output"
         fake_metadata1 = mock.MagicMock()

@@ -3,27 +3,62 @@ name: Tests
 on: [push]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11"]
+  build-macos:
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.11
 
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python -
 
-      - name: Install ffmpeg
+      - name: Install ffmpeg on macOS
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          brew update
+          brew install ffmpeg
+
+      - name: Compile mp3processor for macOS
+        run: |
+          cd src/wavealign/mp3processor
+          cmake -DCMAKE_BUILD_TYPE=Release .
+          cmake --build . --config Release
+
+      - name: Install dependencies
+        run: |
+          poetry install --with dev
+
+      - name: Test with pytest
+        run: |
+          poetry run pytest
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+
+      - name: Install ffmpeg on Windows
+        run: |
+          choco install ffmpeg -y
+
+      - name: Compile mp3processor for Windows
+        run: |
+          cd src\wavealign\mp3processor
+          cmake -DCMAKE_BUILD_TYPE=Release .
+          cmake --build . --config Release
 
       - name: Install dependencies
         run: |

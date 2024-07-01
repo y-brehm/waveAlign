@@ -37,7 +37,9 @@ class AudioPropertySetsReader:
 
         for file_path in self.files_to_process:
             try:
-                if self.__cache_validator and self.__cache_validator.is_cached(file_path):
+                if self.__cache_validator and self.__cache_validator.is_cached(
+                    file_path
+                ):
                     self.__logger.info(
                         f"Skipping already processed file: "
                         f"{os.path.basename(file_path)}"
