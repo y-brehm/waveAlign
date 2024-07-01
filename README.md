@@ -52,10 +52,30 @@ Rekodbox(R) remains unchanged at their respective positions prior to processing.
 * [ffmpeg >= 5.1](https://ffmpeg.org/)
 * [python >= 3.11](https://www.python.org/)
 
-### 📦 Installation
+### 📦 Installation via pip
 
 ```bash
 pip3 install git+https://github.com/y-brehm/waveAlign
+```
+
+### ⚙️ Installation via GitHub Repo
+
+##### Clone the Repository
+
+Navigate to your desired directory and use the following command to clone the repository:
+
+```bash
+git clone https://github.com/y-brehm/wavealign
+```
+
+##### Compile the mp3processor
+
+Navigate to the `mp3processor` directory and use `cmake` to build the mp3processor:
+
+```bash
+cd src/wavealign/mp3processor
+cmake -DCMAKE_BUILD_TYPE=Release .
+cmake --build . --config Release
 ```
 
 ### 🚀 Usage
@@ -171,6 +191,13 @@ against the cache. The input file is skipped if the file path, last
 modification date as well as current LUFS target setting match with cache data.
 
 If you apply changes to your USB stick after waveAlignment, just re-run the waveAlign.
+
+### 📻 Lossy Format Handling
+
+WaveAlign utilizes a modified version of [mp3gain](http://mp3gain.sourceforge.net/)
+to prevent unnecessary de- and encoding of lossy file formats such as .mp3.
+This ensures the timing accuracy of output files and maintains the integrity
+of timing-dependent information such as cue points.
 
 ## Run Tests
 
